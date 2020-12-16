@@ -33,8 +33,10 @@ class GameStart extends React.Component {
         </div>
         <div>
             <div>
-              <input onChange={this.onInputChange} type='text' name='name1' placeholder='Player1' />
-              <input onChange={this.onInputChange} type='text' name='name2' placeholder='Player2' />
+              <div>
+                <input className="serach-term" onChange={this.onInputChange} type='text' name='name1' placeholder='Player 1:' />
+                <input className="serach-term" onChange={this.onInputChange} type='text' name='name2' placeholder='Player 2:' />
+              </div>
               <div className='rule-container' onChange={this.onInputChange}>
                 <div className="options">How Many Rounds?</div>
                 <input className="radio-margin" type="radio" name='length' id="round3" value={3}></input>
