@@ -8,6 +8,7 @@ class GameStart extends React.Component {
       name2: 'Player2',
       length: 3,
       numQs: 2,
+      level: 'easy',
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.onStart = this.onStart.bind(this);
@@ -20,7 +21,7 @@ class GameStart extends React.Component {
   }
   
   onStart() {
-    this.props.settings(this.state.name1, this.state.name2, this.state.length, this.state.numQs)
+    this.props.settings(this.state.name1, this.state.name2, this.state.length, this.state.numQs, this.state.level)
     this.props.gameStart()
     // console.log(this.state.name1, this.state.name2, this.state.length);
   }
@@ -58,6 +59,15 @@ class GameStart extends React.Component {
                   <label htmlFor="numQs4">4 Questions</label>
                 <input className="radio-margin" type="radio" name='numQs' id="numQs5" value={5}></input>
                   <label htmlFor="numQs5">5 Questions</label>
+              </div>
+              <div className='rule-container' onChange={this.onInputChange}>
+                <div className="options">Difficulty?</div>
+                <input className="radio-margin" type="radio" name='level' id="levelE" value='easy'></input>
+                  <label htmlFor="levelE">Easy</label>
+                <input className="radio-margin" type="radio" name='level' id="levelM" value='medium'></input>
+                  <label htmlFor="levelM">Medium</label>
+                <input className="radio-margin" type="radio" name='level' id="levelH" value='hard'></input>
+                  <label htmlFor="levelH">Hard</label>
               </div>
             </div>
             <button className="btn" onClick={this.onStart}>Start Game</button>

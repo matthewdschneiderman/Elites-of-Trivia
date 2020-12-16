@@ -14,7 +14,7 @@ const QuestionsView = (props) => {
   var options = {
     amount: Number(props.qsPerRound),
     category: props.category,
-    difficulty: 'easy',
+    difficulty: props.level,
     type: 'multiple',
   }
   // console.log(options)

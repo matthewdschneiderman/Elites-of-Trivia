@@ -25,6 +25,7 @@ class App extends React.Component {
       currRound: 1,
       categories: 0,
       selCateg: 'none',
+      level: "easy"
     }
     this.changeView = this.changeView.bind(this);
     this.settings = this.settings.bind(this);
@@ -45,12 +46,13 @@ class App extends React.Component {
     });
   }
 
-  settings(player1, player2, round, questions) {
+  settings(player1, player2, round, questions, level) {
     this.setState({
       player1: {name: player1, score: 0},
       player2: {name: player2, score: 0},
       totalRound: round,
       qsPerRound: questions,
+      level: level,
     }, () => console.log(this.state))
   }
 
@@ -129,11 +131,11 @@ class App extends React.Component {
     } else if (view === "Player1") {
       return <Player1 play1Stat={this.state.player1} currRound={this.state.currRound} categories={this.state.categories} selectedCategory={this.selectedCategory1}/>
     } else if (view === "QuestionsView1") {
-      return <QuestionsView1 category={this.state.selCateg} currRound={this.state.currRound} play1Stat={this.state.player1} qsPerRound={this.state.qsPerRound} nextPlayer={(score) => this.nextPlayer(score)}/>
+      return <QuestionsView1 category={this.state.selCateg} currRound={this.state.currRound} play1Stat={this.state.player1} qsPerRound={this.state.qsPerRound} level={this.state.level} nextPlayer={(score) => this.nextPlayer(score)}/>
     } else if (view === "Player2") {
       return <Player2 play2Stat={this.state.player2} currRound={this.state.currRound} categories={this.state.categories} selectedCategory={this.selectedCategory2}/>
     } else if (view === "QuestionsView2") {
-      return <QuestionsView2 category={this.state.selCateg} currRound={this.state.currRound} play2Stat={this.state.player2} qsPerRound={this.state.qsPerRound} endRound={(score) => this.endRound(score)}/>
+      return <QuestionsView2 category={this.state.selCateg} currRound={this.state.currRound} play2Stat={this.state.player2} qsPerRound={this.state.qsPerRound} level={this.state.level} endRound={(score) => this.endRound(score)}/>
     } else if (view === "Game-Over") {
       return <GameOver player1={this.state.player1} player2={this.state.player2} restartGame={this.restartGame} restartNew={this.restartNew}/>
     }
@@ -151,6 +153,9 @@ class App extends React.Component {
                 <div className="player-score">
                   <span>
                     <div><div className="player1-name">{this.state.player1.name}:</div> <div className="player1-score">{this.state.player1.score}</div></div>
+                  </span>
+                  <span className="diff-level">
+                    <div>({this.state.level} | {this.state.totalRound}-R's | {this.state.qsPerRound}-Q's)</div>
                   </span>
                   <span>
                     <div><div className="player2-name">{this.state.player2.name}:</div> <div className="player2-score">{this.state.player2.score}</div></div>

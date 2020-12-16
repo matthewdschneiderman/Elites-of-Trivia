@@ -50,6 +50,11 @@ body {
   color: #0e0ea6;
 }
 
+.diff-level {
+  font-size: 35px;
+  padding-top: 30px;
+}
+
 .player1-score {
   font-size: 50px;
   color: #ba1313;
