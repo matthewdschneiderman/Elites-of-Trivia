@@ -67,22 +67,29 @@ const QuestionsView = (props) => {
 
   console.log('questions: ', questions);
   if (!shuffledQs) {
-    return <div>"loading..."</div>
+    return <div className="loading">"loading..."</div>
   } else {
     return (
       <div>
-        <div>{props.play2Stat.name}'s Turn</div>
-        <div>Total Score: {props.play2Stat.score}</div>
-        <div>Round {props.currRound}</div>
-        <div>Round Score {roundScore}</div>
-        <div>
-          <div>Catergory: {questions[count].category}</div>
-          <div>Question: {questions[count].question}</div>
-          <div>{shuffledQs.map((incorrectAnw) => {
-            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}>{incorrectAnw.text}</button>
+        <div className="player-turn">
+          <div className="round-track">
+            <span className="span-align">Round <div>{props.currRound}</div></span>
+          </div>
+          <div className="name2-turn">{props.play2Stat.name}'s Turn</div>
+          <div className="round-track">
+              <span className="span-align">Round Score <div className="player2-color">{roundScore}</div></span>
+          </div>
+        </div>
+        <div className="question-container">
+          <div className="category"><span>{questions[count].category}</span></div>
+          <div className="question-style">{questions[count].question}</div>
+          <div className="answer-choices">{shuffledQs.map((incorrectAnw) => {
+            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}><span className="card-Anws">{incorrectAnw.text}</span></button>
           })}</div>
-          <button id='next-btn' className='hide' onClick={nextQuestion}>Next Question</button>
-          <button id='end-btn' className='hide' onClick={() => props.endRound(roundScore)}>End Turn</button>
+          <div className="button-move">
+            <button id='next-btn' className='hide btn' onClick={nextQuestion}>Next Question</button>
+            <button id='end-btn' className='hide btn' onClick={() => props.endRound(roundScore)}>End Round</button>
+          </div>
         </div>
       </div>
     )

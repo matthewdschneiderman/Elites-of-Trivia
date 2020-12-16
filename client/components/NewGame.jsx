@@ -14,7 +14,7 @@ const NewGame = ({handleClick}) => {
       <h3>6. Enjoy The Game!</h3>
       </div>
       <h2>Click Below to Set the Options and Get Started</h2>
-      <button onClick={handleClick}>New Game</button>
+      <button className="btn" onClick={handleClick}>New Game</button>
     </div>
   )
 }

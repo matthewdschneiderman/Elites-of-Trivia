@@ -1,22 +1,18 @@
 import React from "react";
-import opentdb from 'opentdb-api';
 
 
 const Player1 = (props) => {
-  // let categories;
-  // opentdb.getCategories().then(result => {
-  // categories = result;
-  // console.log(result);
-  // });
-
-
+  
   return (
     <div>
-      <div>{props.play1Stat.name}'s Turn</div>
-      <div>Total Score: {props.play1Stat.score}</div>
-      <div>Round {props.currRound}</div>
-      <div>{props.categories.map((category) => (
-          <div key={category.id} onClick={() => props.selectedCategory(category.id)}>{category.id - 8}. {category.name}</div>
+      <div className="player-turn">
+        <div className="round-track">
+          <span className="span-align">Round <div>{props.currRound}</div></span>
+        </div>
+        <div className="name1-turn">{props.play1Stat.name}'s Turn</div>
+      </div>
+      <div className="cards">{props.categories.map((category) => (
+          <div className="card" key={category.id} onClick={() => props.selectedCategory(category.id)}><span className="card-Qs"><div>{category.id - 8}.</div> {category.name}</span></div>
         ))} 
       </div>
     </div>

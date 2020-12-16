@@ -6,7 +6,7 @@ class GameStart extends React.Component {
     this.state = {
       name1: 'Player1',
       name2: 'Player2',
-      length: 0,
+      length: 3,
       numQs: 2,
     }
     this.onInputChange = this.onInputChange.bind(this);
@@ -58,7 +58,7 @@ class GameStart extends React.Component {
                   <label htmlFor="numQs5">5 Questions</label>
               </div>
             </div>
-            <button onClick={this.onStart}>Start Game</button>
+            <button className="btn" onClick={this.onStart}>Start Game</button>
         </div>
       </div>
     )

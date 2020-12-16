@@ -39,6 +39,7 @@ const QuestionsView = (props) => {
   }
 
   const showAnswer = (e) => {
+    console.log("e.target.className", e.target.className)
     if (e.target.className === 'right-ans') {
       setRoundScore(roundScore + 100);
       document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
@@ -64,22 +65,29 @@ const QuestionsView = (props) => {
 
   console.log('questions: ', questions);
   if (!shuffledQs) {
-    return <div>"loading..."</div>
+    return <div className="loading">"loading..."</div>
   } else {
     return (
       <div>
-        <div>{props.play1Stat.name}'s Turn</div>
-        <div>Total Score: {props.play1Stat.score}</div>
-        <div>Round {props.currRound}</div>
-        <div>Round Score {roundScore}</div>
-        <div>
-          <div>Catergory: {questions[count].category}</div>
-          <div>Question: {questions[count].question}</div>
-          <div>{shuffledQs.map((incorrectAnw) => {
-            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}>{incorrectAnw.text}</button>
+        <div className="player-turn">
+          <div className="round-track">
+            <span className="span-align">Round <div>{props.currRound}</div></span>
+          </div>
+          <div className="name1-turn">{props.play1Stat.name}'s Turn</div>
+          <div className="round-track">
+            <span className="span-align">Round Score <div className="player1-color">{roundScore}</div></span>
+          </div>
+        </div>
+        <div className="question-container">
+          <div className="category"><span>{questions[count].category}</span></div>
+          <div className="question-style">{questions[count].question}</div>
+          <div className="answer-choices">{shuffledQs.map((incorrectAnw) => {
+            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}><span className="card-Anws">{incorrectAnw.text}</span></button>
           })}</div>
-          <button id='next-btn' className='hide' onClick={nextQuestion}>Next Question</button>
-          <button id='end-btn' className='hide' onClick={() => props.nextPlayer(roundScore)}>End Turn</button>
+          <div className="button-move">
+            <button id='next-btn' className='hide btn' onClick={nextQuestion}>Next Question</button>
+            <button id='end-btn' className='hide btn' onClick={() => props.nextPlayer(roundScore)}>End Turn</button>
+          </div>
         </div>
       </div>
     )

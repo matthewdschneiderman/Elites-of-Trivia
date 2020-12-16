@@ -148,9 +148,13 @@ class App extends React.Component {
         {(() => {
             if (this.state.view !== 'New' &&  this.state.view !== 'game-start') {
               return (
-                <div>
-                <div>{this.state.player1.name} V.S. {this.state.player2.name}</div>
-                <div>{this.state.player1.score} V.S. {this.state.player2.score}</div>
+                <div className="player-score">
+                  <span>
+                    <div><div className="player1-name">{this.state.player1.name}:</div> <div className="player1-score">{this.state.player1.score}</div></div>
+                  </span>
+                  <span>
+                    <div><div className="player2-name">{this.state.player2.name}:</div> <div className="player2-score">{this.state.player2.score}</div></div>
+                  </span>
                 </div>
               )
             }
