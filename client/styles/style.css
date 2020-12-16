@@ -1,0 +1,79 @@
+/* .next-btn {
+} */
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #7e55aa94;
+}
+
+.hide {
+  display: none;
+}
+
+.header {
+  /* padding: 60px; */
+  background: #1000ff;
+  margin: 0 auto;
+  width: 63%;
+}
+
+.title {
+  background: #db0808c7;
+  font-family: cursive;
+  text-align: center;
+  color: #ffffff;
+  font-size: 60px;
+  margin-left: 300px;
+  margin-right: 300px;
+}
+
+.playScore {
+  display: inline;
+}
+
+/* NewGame */
+
+.newContainer {
+  margin: 0 auto;
+  width: 63%;
+  text-align: center;
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
+label {
+  font-size: 40px;
+}
+
+input[type='radio'] {
+  border: 0px;
+  width: 3%;
+  height: 2em;
+}
+
+.options {
+  font-size: 40px;
+  text-decoration: underline;
+  margin-bottom: 20px;
+}
+
+button[disabled] {
+  background-color: #ff0000;
+  color: #000000;
+}
+
+button[disabled].right-ans {
+  background-color: #008000;
+  color: #000000;
+}
+
+.rule-container {
+  margin: 30px;
+}
+
+.radio-margin {
+  margin: 10px;
+}
