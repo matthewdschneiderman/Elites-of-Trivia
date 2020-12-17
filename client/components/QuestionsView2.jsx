@@ -41,6 +41,7 @@ const QuestionsView = (props) => {
   }
 
   const showAnswer = (e) => {
+    console.log("e.target.className", e.target.className)
     if (e.target.className === 'right-ans') {
       setRoundScore(roundScore + 100);
       document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
@@ -65,7 +66,6 @@ const QuestionsView = (props) => {
   }
 
 
-  console.log('questions: ', questions);
   if (!shuffledQs) {
     return <div className="loading">"loading..."</div>
   } else {
