@@ -82,7 +82,7 @@ const QuestionsView = (props) => {
           <div className="category"><span>{questions[count].category}</span></div>
           <div className="question-style">{questions[count].question}</div>
           <div className="answer-choices">{shuffledQs.map((incorrectAnw) => {
-            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}><span className="card-Anws">{incorrectAnw.text}</span></button>
+            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}><span id="card-Anws" className={incorrectAnw.correct}>{incorrectAnw.text}</span></button>
           })}</div>
           <div className="button-move">
             <button id='next-btn' className='hide btn' onClick={nextQuestion}>Next Question</button>

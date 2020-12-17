@@ -261,7 +261,7 @@ button[disabled].right-ans {
   width: 90%;
 }
 
-.card-Anws {
+#card-Anws {
   position: absolute;
   text-align: center;
   top: 50%;
