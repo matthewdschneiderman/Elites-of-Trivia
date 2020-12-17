@@ -103,7 +103,7 @@ class App extends React.Component {
 
   restartGame() {
     this.setState({
-      view: "QuestionsView1",
+      view: "Player1",
       player1: {name: this.state.player1.name, score: 0},
       player2: {name: this.state.player2.name, score: 0},
       qsPerRound: this.state.qsPerRound,
