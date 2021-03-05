@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import opentdb from 'opentdb-api';
-import NewGame from './components/NewGame.jsx'
-import GameStart from './components/GameStart.jsx'
-import Player1 from './components/Player1.jsx'
-import Player2 from './components/Player2.jsx'
-import QuestionsView1 from './components/QuestionsView1.jsx'
-import QuestionsView2 from './components/QuestionsView2.jsx'
-import GameOver from './components/GameOver.jsx'
+import NewGame from './components/NewGame/index.jsx'
+import GameStart from './components/GameStart/index.jsx'
+import Player1 from './components/Player1/index.jsx'
+import Player2 from './components/Player2/index.jsx'
+import QuestionsView1 from './components/QuestionsView1/index.jsx'
+import QuestionsView2 from './components/QuestionsView2/index.jsx'
+import GameOver from './components/GameOver/index.jsx'
 import './styles/style.css'
 
 // var util = require('util')
