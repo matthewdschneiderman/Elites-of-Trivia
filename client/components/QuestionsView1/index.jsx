@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import opentdb from 'opentdb-api';
 import "regenerator-runtime/runtime.js";
-
+import './main.scss'
 
 const QuestionsView = (props) => {
 
