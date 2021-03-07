@@ -1,32 +1,26 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
-class GameStart extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      name1: 'Player1',
-      name2: 'Player2',
-      length: 3,
-      numQs: 2,
-      level: 'easy',
-    }
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onStart = this.onStart.bind(this);
-  }
+const GameStart = () => { 
 
-  onInputChange(e) {
+  const [name1, setName1] = useState('Player1');
+  const [name2, setName2] = useState('Player2');
+  const [length, setLength] = useState(3);
+  const [numQs, setNumQs] = useState(2);
+  const [level, setLevel] = useState('easy');
+  
+
+  const onInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     })
   }
   
-  onStart() {
+  const onStart = () => {
     this.props.settings(this.state.name1, this.state.name2, this.state.length, this.state.numQs, this.state.level)
     this.props.gameStart()
     // console.log(this.state.name1, this.state.name2, this.state.length);
   }
 
-  render() {
     return (
       <div className="newContainer">
         <div>
@@ -74,7 +68,7 @@ class GameStart extends React.Component {
         </div>
       </div>
     )
-  }
+  
 }
 
 export default GameStart;

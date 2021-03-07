@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import opentdb from 'opentdb-api';
 import "regenerator-runtime/runtime.js";
 
 
 const QuestionsView = (props) => {
 
-  const [questions, setQuestions] = React.useState("");
-  const [roundScore, setRoundScore] = React.useState(0);
-  const [count, setCount] = React.useState(0);
-  const [questionAnswered, setQuestionAnswered] = React.useState(false);
-  const [shuffledQs, setShuffledQs] = React.useState(false);
+  const [questions, setQuestions] = useState("");
+  const [roundScore, setRoundScore] = useState(0);
+  const [count, setCount] = useState(0);
+  const [questionAnswered, setQuestionAnswered] = useState(false);
+  const [shuffledQs, setShuffledQs] = useState(false);
 
   var options = {
     amount: Number(props.qsPerRound),
@@ -19,7 +19,7 @@ const QuestionsView = (props) => {
   }
   // console.log(options)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchQuestions = async () => {
       const uniqueTrivia = await opentdb.getTrivia(options);
       setQuestions(uniqueTrivia);
