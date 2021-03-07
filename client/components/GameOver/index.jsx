@@ -1,5 +1,5 @@
 import React from "react";
-
+import './main.scss'
 const GameOver = (props) => {
 
   let winner = {};

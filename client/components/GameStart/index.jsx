@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from "react";
+import './main.scss';
 
-const GameStart = () => {
+const GameStart = (props) => {
 
-  const [name, setName] = useState({name1: 'Player1', name2: 'Player2'});
+  const [name1, setName1] = useState('Player1');
+  const [name2, setName2] = useState('Player2');
   const [length, setLength] = useState(3);
-  const [numQs, setnumQs] = useState(2);
+  const [numQs, setNumQs] = useState(2);
   const [level, setLevel] = useState('easy');
 
   // constructor(props) {
@@ -20,17 +22,16 @@ const GameStart = () => {
   //   this.onStart = this.onStart.bind(this);
   // }
 
-  const onInputChange = (e) => {
-    setName({
-      [e.target.name]: e.target.value,
-    })
-  }
   
   const onStart = () => {
-    this.props.settings(this.state.name1, this.state.name2, this.state.length, this.state.numQs, this.state.level)
-    this.props.gameStart()
+    props.settings(name1, name2, length, numQs, level)
+    props.gameStart()
     // console.log(this.state.name1, this.state.name2, this.state.length);
   }
+
+  const rounds = [3,5,7,10];
+  const nums = [2,3,4,5];
+  const diffs = ['Easy', 'Medium', 'Hard'];
 
     return (
       <div className="newContainer">
@@ -40,42 +41,44 @@ const GameStart = () => {
         <div>
             <div>
               <div>
-                <input className="serach-term" onChange={onInputChange} type='text' name='name1' placeholder='Player 1:' />
-                <input className="serach-term" onChange={onInputChange} type='text' name='name2' placeholder='Player 2:' />
+                <input className="serach-term" onChange={(e) => setName1(e.target.value)} type='text' name='name1' placeholder='Player 1:' />
+                <input className="serach-term" onChange={(e) => setName2(e.target.value)} type='text' name='name2' placeholder='Player 2:' />
               </div>
-              <div className='rule-container' onChange={this.onInputChange}>
+              <div className='rule-container' onChange={(e) => setLength(e.target.value)}>
                 <div className="options">How Many Rounds?</div>
-                <input className="radio-margin" type="radio" name='length' id="round3" value={3}></input>
-                  <label htmlFor="round3">3 Rounds</label>
-                <input className="radio-margin" type="radio" name='length' id="round5" value={5}></input>
-                  <label htmlFor="round5">5 Rounds</label>
-                <input className="radio-margin" type="radio" name='length' id="round7" value={7}></input>
-                  <label htmlFor="round7">7 Rounds</label>
-                <input className="radio-margin" type="radio" name='length' id="round10" value={10}></input>
-                  <label htmlFor="round10">10 Rounds</label>
+                {rounds.map((round) => {
+                  return (
+                    <span key={round} >
+                    <input className="radio-margin" type="radio" name='length' id={`round${round}`} value={round}></input>
+                      <label htmlFor={`round${round}`}>{round} Rounds</label>
+                      </span>
+                  );
+                })}
               </div>
-              <div className='rule-container' onChange={this.onInputChange}>
+              <div className='rule-container' onChange={(e) => setNumQs(e.target.value)}>
                 <div className="options">How Many Questions per Round?</div>
-                <input className="radio-margin" type="radio" name='numQs' id="numQs2" value={2}></input>
-                  <label htmlFor="numQs2">2 Questions</label>
-                <input className="radio-margin" type="radio" name='numQs' id="numQs3" value={3}></input>
-                  <label htmlFor="numQs3">3 Questions</label>
-                <input className="radio-margin" type="radio" name='numQs' id="numQs4" value={4}></input>
-                  <label htmlFor="numQs4">4 Questions</label>
-                <input className="radio-margin" type="radio" name='numQs' id="numQs5" value={5}></input>
-                  <label htmlFor="numQs5">5 Questions</label>
+                {nums.map((num) => {
+                  return (
+                    <span key={num} >
+                    <input className="radio-margin" type="radio" name='numQs' id={`numQs${num}`} value={num}></input>
+                  <label htmlFor={`numQs${num}`}>{num} Questions</label>
+                      </span>
+                  );
+                })}
               </div>
-              <div className='rule-container' onChange={this.onInputChange}>
+              <div className='rule-container' onChange={(e) => setLevel(e.target.value)}>
                 <div className="options">Difficulty?</div>
-                <input className="radio-margin" type="radio" name='level' id="levelE" value='easy'></input>
-                  <label htmlFor="levelE">Easy</label>
-                <input className="radio-margin" type="radio" name='level' id="levelM" value='medium'></input>
-                  <label htmlFor="levelM">Medium</label>
-                <input className="radio-margin" type="radio" name='level' id="levelH" value='hard'></input>
-                  <label htmlFor="levelH">Hard</label>
+                {diffs.map((diff) => {
+                  return (
+                    <span key={diff} >
+                    <input className="radio-margin" type="radio" name='level' id={`level${diff}`} value={diff}></input>
+                  <label htmlFor={`level${diff}`}>{diff}</label>
+                      </span>
+                  );
+                })}
               </div>
             </div>
-            <button className="btn" onClick={this.onStart}>Start Game</button>
+            <button className="btn" onClick={onStart}>Start Game</button>
         </div>
       </div>
     );

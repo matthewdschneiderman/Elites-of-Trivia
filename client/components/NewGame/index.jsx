@@ -1,4 +1,5 @@
 import React from "react";
+import './main.scss'
 
 const NewGame = ({handleClick}) => {
   return (
