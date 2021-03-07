@@ -1,32 +1,38 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
-class GameStart extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      name1: 'Player1',
-      name2: 'Player2',
-      length: 3,
-      numQs: 2,
-      level: 'easy',
-    }
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onStart = this.onStart.bind(this);
-  }
+const GameStart = () => {
 
-  onInputChange(e) {
-    this.setState({
+  const [name, setName] = useState({name1: 'Player1', name2: 'Player2'});
+  const [length, setLength] = useState(3);
+  const [numQs, setnumQs] = useState(2);
+  const [level, setLevel] = useState('easy');
+
+  // constructor(props) {
+  //   super(props)
+  //   this.state = {
+  //     name1: 'Player1',
+  //     name2: 'Player2',
+  //     length: 3,
+  //     numQs: 2,
+  //     level: 'easy',
+  //   }
+  //   this.onInputChange = this.onInputChange.bind(this);
+  //   this.onStart = this.onStart.bind(this);
+  // }
+
+  const onInputChange = (e) => {
+    
+    setName({
       [e.target.name]: e.target.value,
     })
   }
   
-  onStart() {
+  const onStart = () => {
     this.props.settings(this.state.name1, this.state.name2, this.state.length, this.state.numQs, this.state.level)
     this.props.gameStart()
     // console.log(this.state.name1, this.state.name2, this.state.length);
   }
 
-  render() {
     return (
       <div className="newContainer">
         <div>
@@ -35,8 +41,8 @@ class GameStart extends React.Component {
         <div>
             <div>
               <div>
-                <input className="serach-term" onChange={this.onInputChange} type='text' name='name1' placeholder='Player 1:' />
-                <input className="serach-term" onChange={this.onInputChange} type='text' name='name2' placeholder='Player 2:' />
+                <input className="serach-term" onChange={onInputChange} type='text' name='name1' placeholder='Player 1:' />
+                <input className="serach-term" onChange={onInputChange} type='text' name='name2' placeholder='Player 2:' />
               </div>
               <div className='rule-container' onChange={this.onInputChange}>
                 <div className="options">How Many Rounds?</div>
@@ -73,8 +79,8 @@ class GameStart extends React.Component {
             <button className="btn" onClick={this.onStart}>Start Game</button>
         </div>
       </div>
-    )
-  }
+    );
+  
 }
 
 export default GameStart;
