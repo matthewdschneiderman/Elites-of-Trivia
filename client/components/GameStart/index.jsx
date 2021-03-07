@@ -21,7 +21,6 @@ const GameStart = () => {
   // }
 
   const onInputChange = (e) => {
-    
     setName({
       [e.target.name]: e.target.value,
     })
