@@ -7,7 +7,7 @@ import Player1 from './components/Player1/index.jsx'
 import Player2 from './components/Player2/index.jsx'
 import QuestionsView1 from './components/QuestionsView1/index.jsx'
 import QuestionsView2 from './components/QuestionsView2/index.jsx'
-import GameOver from './components/GameOver/index.jsx'
+import GameOver from './components/GameOver/index.tsx'
 import './styles/style.css'
 
 // var util = require('util')
@@ -153,7 +153,7 @@ const App = () => {
     //   }
     // }
     
-    const restartGame =() => {
+    const restartGame = () => {
       setView("Player1")
       setPlayer1({name: player1.name, score: 0})
       setPlayer2({name: player2.name, score: 0})
