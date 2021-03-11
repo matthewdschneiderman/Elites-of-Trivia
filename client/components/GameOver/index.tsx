@@ -1,8 +1,22 @@
 import React from "react";
-import './main.scss'
-const GameOver = (props) => {
+import './main.scss';
 
-  let winner = {};
+interface winner {
+  name: string;
+  score: number;
+}
+interface player {
+  score: number,
+  name: string
+}
+interface props {
+  player1: player,
+  player2: player
+}
+
+const GameOver = (props: props) => {
+
+  let winner: winner;
 
   if (props.player1.score > props.player2.score) {
     winner.name = props.player1.name
