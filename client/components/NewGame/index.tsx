@@ -1,7 +1,11 @@
 import React from "react";
-import './main.scss'
+// import './main.scss'
 
-const NewGame = ({handleClick}) => {
+interface IProps {
+  handleClick: () => void
+}
+
+const NewGame: React.FC<IProps> = ({handleClick}) => {
   return (
     <div className="newContainer">
       <h1>Welcome to the Most Thrilling Experiance of Trivia!</h1>

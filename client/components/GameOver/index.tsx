@@ -1,25 +1,25 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 // import './main.scss';
 
-interface Winner {
+interface IWinner {
   name: string;
   score: number;
 }
-interface Player {
+interface IPlayer {
   score: number,
   name: string
 }
-interface Props {
-  player1: Player,
-  player2: Player,
+interface IProps {
+  player1: IPlayer,
+  player2: IPlayer,
   restartGame: () => void,
   restartNew: () => void,
 }
 
 
-const GameOver: React.FC<Props> = (props) => {
+const GameOver: FC<IProps> = (props) => {
 
-  let winner: Winner;
+  let winner: IWinner;
 
   if (props.player1.score > props.player2.score) {
     winner.name = props.player1.name

@@ -1,13 +1,18 @@
-import React, {useState, useEffect} from "react";
-import './main.scss';
+import React, {useState, useEffect, FC} from "react";
+// import './main.scss';
 
-const GameStart = (props) => {
+  interface IProps {
+    settings: (name1: string, name2: string, length: number, numQs: number, level: string) => void,
+    gameStart:() => void
+  }
 
-  const [name1, setName1] = useState('Player1');
-  const [name2, setName2] = useState('Player2');
-  const [length, setLength] = useState(3);
-  const [numQs, setNumQs] = useState(2);
-  const [level, setLevel] = useState('easy');
+const GameStart: FC<IProps> = (props) => {
+
+  const [name1, setName1] = useState<string>('Player1');
+  const [name2, setName2] = useState<string>('Player2');
+  const [length, setLength] = useState<number>(3);
+  const [numQs, setNumQs] = useState<number>(2);
+  const [level, setLevel] = useState<string>('easy');
 
   // constructor(props) {
   //   super(props)
@@ -22,7 +27,8 @@ const GameStart = (props) => {
   //   this.onStart = this.onStart.bind(this);
   // }
 
-  
+
+
   const onStart = () => {
     props.settings(name1, name2, length, numQs, level)
     props.gameStart()
@@ -41,10 +47,10 @@ const GameStart = (props) => {
         <div>
             <div>
               <div>
-                <input className="serach-term" onChange={(e) => setName1(e.target.value)} type='text' name='name1' placeholder='Player 1:' />
-                <input className="serach-term" onChange={(e) => setName2(e.target.value)} type='text' name='name2' placeholder='Player 2:' />
+                <input className="serach-term" onChange={(e: any) => setName1(e.target.value)} type='text' name='name1' placeholder='Player 1:' />
+                <input className="serach-term" onChange={(e: any) => setName2(e.target.value)} type='text' name='name2' placeholder='Player 2:' />
               </div>
-              <div className='rule-container' onChange={(e) => setLength(e.target.value)}>
+              <div className='rule-container' onChange={(e: any) => setLength(e.target.value)}>
                 <div className="options">How Many Rounds?</div>
                 {rounds.map((round) => {
                   return (
@@ -55,7 +61,7 @@ const GameStart = (props) => {
                   );
                 })}
               </div>
-              <div className='rule-container' onChange={(e) => setNumQs(e.target.value)}>
+              <div className='rule-container' onChange={(e: any) => setNumQs(e.target.value)}>
                 <div className="options">How Many Questions per Round?</div>
                 {nums.map((num) => {
                   return (
@@ -66,7 +72,7 @@ const GameStart = (props) => {
                   );
                 })}
               </div>
-              <div className='rule-container' onChange={(e) => setLevel(e.target.value)}>
+              <div className='rule-container' onChange={(e: any) => setLevel(e.target.value)}>
                 <div className="options">Difficulty?</div>
                 {diffs.map((diff) => {
                   return (
