@@ -56,6 +56,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
           options: options
         }
       }).then((result: any) => {
+        console.log(result.data);
         setQuestions(result.data);
       });
     
