@@ -19,8 +19,14 @@ app.get('/opentdb', (req, res) => {
   } else {
     opentdb
       .getTrivia(JSON.parse(req.query.options))
-      .then((result) => {
-        res.status(200).send(result);
+      .then((results) => {
+        var Trivia = [];
+        for (var result of results) {
+          var answers = result.incorrect_answers;
+          answers.splice(Math.floor(Math.random() * 4), 0, result.correct_answer);
+          Trivia.push({question: result.question, answers: answers, correct: result.correct_answer});
+        }
+        res.status(200).send(Trivia);
       })
       .catch((err) => console.log(err));
   }

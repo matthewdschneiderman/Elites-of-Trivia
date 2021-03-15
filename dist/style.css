@@ -222,7 +222,7 @@ button[disabled].right-ans {
   margin: 60px auto;
 }
 
-#all-answers {
+.all-answers {
   display: grid;
   grid-template-rows: max-content 200px 1fr;
   border: 1px solid #c9c9c9;
@@ -258,7 +258,7 @@ button[disabled].right-ans {
   width: 90%;
 }
 
-#card-Anws {
+.card-Anws {
   position: absolute;
   text-align: center;
   top: 50%;

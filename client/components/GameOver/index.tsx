@@ -19,18 +19,12 @@ interface IProps {
 
 const GameOver: FC<IProps> = (props) => {
 
-  let winner: IWinner;
+  let winner: IWinner = {name: props.player1.score > props.player2.score ? 
+      props.player1.name: props.player2.score > props.player1.score ?
+      props.player2.name: "It's a Tie!",
+    score: props.player1.score >= props.player2.score ?
+      props.player1.score: props.player2.score};
 
-  if (props.player1.score > props.player2.score) {
-    winner.name = props.player1.name
-    winner.score = props.player1.score
-  } else if (props.player2.score > props.player1.score) {
-    winner.name = props.player2.name
-    winner.score = props.player2.score
-  } else {
-    winner.name = "It's a Tie!"
-    winner.score = props.player1.score
-  }
 
   return (
     <div className="newContainer">

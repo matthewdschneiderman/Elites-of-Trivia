@@ -21,25 +21,26 @@ interface IProps {
 
 const QuestionsView: React.FC<IProps> = (props) => {
 
-  interface Questions {
-    correct_answer: number[],
-    incorrect_answers: number[],
-    category: string,
+  interface Question {
+    correct: string,
+    answers: string[],
     question: string
   }
 
-  interface Answer {
-    text: number[],
-    correct: string
+
+  interface Options {
+    amount: number,
+    category: number,
+    difficulty: string,
+    type: 'multiple',
   }
 
-  const [questions, setQuestions] = React.useState<Questions[]>([]);
+  const [questions, setQuestions] = React.useState<Question[]>([]);
   const [roundScore, setRoundScore] = React.useState<number>(0);
   const [count, setCount] = React.useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false)
-  const [shuffledQs, setShuffledQs] = React.useState<Answer[]>([]);
 
-  var options = {
+  const options: Options = {
     amount: props.qsPerRound,
     category: props.category,
     difficulty: props.level,
@@ -55,26 +56,15 @@ const QuestionsView: React.FC<IProps> = (props) => {
           options: options
         }
       }).then((result: any) => {
-        console.log('questions:',result.data);
         setQuestions(result.data);
       });
     
   }, []);
 
 
-  if (questions.length > 0 && shuffledQs.length < 1) {
-    let corrAnswer: Answer[] = [ { text: questions[count].correct_answer, correct: 'right-ans' } ]
-    let wrongAnswer: Answer[] = questions[count].incorrect_answers.map((inAnsw) => {
-      return {text: [inAnsw], correct: 'wrong-ans'}
-    })
-    let tempAns: Answer[] = corrAnswer.concat(wrongAnswer);
-    let shuffled: Answer[] = tempAns.sort(() => Math.random() - 0.5)
-    setShuffledQs(shuffled)
-  }
-
   const showAnswer = (e: any) => {
-    console.log("e.target.className", e.target.className)
-    if (e.target.className === 'right-ans') {
+    console.log(e.target.value, questions[count].correct);
+    if (e.target.value === questions[count].correct) {
       setRoundScore(roundScore + 100);
       document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
     } else {
@@ -94,11 +84,8 @@ const QuestionsView: React.FC<IProps> = (props) => {
     document.body.style.backgroundColor =  "#7e55aa94"
     document.getElementById("next-btn").classList.add("hide")
     setCount(count + 1)
-    setShuffledQs([])
   }
-
-
-  if (!shuffledQs) {
+  if (questions.length < 1) {
     return <div className="loading">"loading..."</div>
   } else {
     return (
@@ -113,10 +100,13 @@ const QuestionsView: React.FC<IProps> = (props) => {
           </div>
         </div>
         <div className="question-container">
-          <div className="category"><span>{questions[count].category}</span></div>
+          <div className="category"><span>{props.category}</span></div>
           <div className="question-style">{questions[count].question}</div>
-          <div className="answer-choices">{shuffledQs.map((incorrectAnw) => {
-            return <button id="all-answers" disabled={questionAnswered} onClick={showAnswer} className={incorrectAnw.correct}><span id="card-Anws" className={incorrectAnw.correct}>{incorrectAnw.text[0]}</span></button>
+          <div className="answer-choices">{questions[count].answers.map((answer) => {
+            return <button className="all-answers" key={answer} value={answer} disabled={questionAnswered} onClick={showAnswer}
+              style={answer === questions[count].correct && questionAnswered ? {backgroundColor: 'green'}: {}}>
+              <span className="card-Anws">{answer}</span>
+              </button>
           })}</div>
           <div className="button-move">
             <button id='next-btn' className='hide btn' onClick={nextQuestion}>Next Question</button>
@@ -125,7 +115,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
         </div>
       </div>
     )
-  }
+        }
 }
 
 export default QuestionsView;
