@@ -37,18 +37,16 @@ const QuestionsView: React.FC<IProps> = (props) => {
   const [roundScore, setRoundScore] = React.useState<number>(0);
   const [count, setCount] = React.useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false)
-  const [shuffledQs, setShuffledQs] = React.useState<Answer[]>();
+  const [shuffledQs, setShuffledQs] = React.useState<Answer[]>([]);
 
   var options = {
-    amount: Number(props.qsPerRound),
+    amount: props.qsPerRound,
     category: props.category,
     difficulty: props.level,
     type: 'multiple',
   }
-  console.log(options)
 
   React.useEffect(() => {
-    const fetchQuestions = async () => {
       axios({
         url: '/opentdb',
         method: 'get',
@@ -57,21 +55,14 @@ const QuestionsView: React.FC<IProps> = (props) => {
           options: options
         }
       }).then((result: any) => {
-        setQuestions(result);
+        console.log('questions:',result.data);
+        setQuestions(result.data);
       });
-      /*
-      const uniqueTrivia = await opentdb.getTrivia(options);
-
-      // const questions = uniqueTrivia;
-      setQuestions(uniqueTrivia);
-      */
-    };
     
-    fetchQuestions();
   }, []);
 
 
-  if (questions.length > 0 && !shuffledQs) {
+  if (questions.length > 0 && shuffledQs.length < 1) {
     let corrAnswer: Answer[] = [ { text: questions[count].correct_answer, correct: 'right-ans' } ]
     let wrongAnswer: Answer[] = questions[count].incorrect_answers.map((inAnsw) => {
       return {text: [inAnsw], correct: 'wrong-ans'}

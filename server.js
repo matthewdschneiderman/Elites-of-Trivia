@@ -9,16 +9,20 @@ const port = process.env.PORT || 4100;
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/opentdb', (req, res) => {
-  console.log(req.params);
-  switch (req.params.method) {
-    case 'categories':
-      opentdb.getCategories().then((result) => {
-        res.send(result);
-      });
-    case 'questions':
-      opentdb.getTrivia(req.params.options).then((result) => {
-        res.send(result);
-      });
+  if (req.query.method === 'categories') {
+    opentdb
+      .getCategories()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => console.log(err));
+  } else {
+    opentdb
+      .getTrivia(JSON.parse(req.query.options))
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => console.log(err));
   }
 });
 

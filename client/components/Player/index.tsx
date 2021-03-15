@@ -9,17 +9,17 @@ interface IProps {
   player: number
 }
 
-interface IPlayer {
+export interface IPlayer {
   name: string,
   score: number
 }
 
-interface ICategory {
+export interface ICategory {
   id: number,
   name: string,
 }
 
-const Player1: React.FC<IProps> = (props) => {
+const Player: React.FC<IProps> = (props) => {
   
   return (
     <div>
@@ -37,4 +37,4 @@ const Player1: React.FC<IProps> = (props) => {
   )
 }
 
-export default Player1;
+export default Player;

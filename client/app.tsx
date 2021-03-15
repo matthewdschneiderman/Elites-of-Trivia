@@ -1,26 +1,13 @@
 import React, { useEffect, useState, FC } from "react";
 import axios from 'axios';
 import NewGame from './components/NewGame/index'
-import { Interface } from "readline";
 import GameStart from './components/GameStart/index'
-import Player from './components/Player/index'
+import Player, { ICategory, IPlayer } from './components/Player/index'
 import QuestionsView from './components/QuestionsView/index'
 import GameOver from './components/GameOver/index'
-// import './styles/style.css'
 
-// var util = require('util')
 
-interface IPlayer {
-    name: string,
-    score: number,
-  }
 
-interface IProps {}
-
-interface ICategory{
-  id: number,
-  name: string
-}
 
 const App: FC = () => {
 
@@ -43,13 +30,8 @@ const App: FC = () => {
           method: 'categories'
         }
       }).then((result: any) => {
-        setCategories(result);
+        setCategories(result.data);
       });
-      /*
-      opentdb.getCategories().then(result => {
-        setCategories(result)
-      });
-      */
     }, [])
     
     
@@ -116,7 +98,7 @@ const App: FC = () => {
       case 'Player1':
         return <Player playStat={player1} currRound={currRound} categories={categories} selectedCategory={selectedCategory1} player={1}/>;
       case 'Player2':
-        return <Player playStat={player2} currRound={currRound} categories={categories} selectedCategory={selectedCategory2} player={1}/>
+        return <Player playStat={player2} currRound={currRound} categories={categories} selectedCategory={selectedCategory2} player={2}/>
       case 'QuestionsView1':
         return <QuestionsView category={selCateg} currRound={currRound} playStat={player1} player={1}
           qsPerRound={qsPerRound} level={level} next={(score: number) => nextPlayer(score)}/>;
@@ -130,7 +112,6 @@ const App: FC = () => {
     
     return (
       <div>
-        <h2>Hello</h2>
         <div className="header">
           <div className="title">MVP of Trivia</div>
         </div>
