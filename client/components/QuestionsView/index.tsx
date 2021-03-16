@@ -41,7 +41,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
   const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false)
 
   const options: Options = {
-    amount: props.qsPerRound,
+    amount: Number(props.qsPerRound),
     category: props.category,
     difficulty: props.level,
     type: 'multiple',
@@ -63,7 +63,6 @@ const QuestionsView: React.FC<IProps> = (props) => {
 
 
   const showAnswer = (e: any) => {
-    console.log(e.target.value, questions[count].correct);
     if (e.target.value === questions[count].correct) {
       setRoundScore(roundScore + 100);
       document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
