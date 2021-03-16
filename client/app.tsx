@@ -89,26 +89,26 @@ const App: FC = () => {
         setCurrRound(1)
     }
     
-  const renderView = () => {
-    switch (view) {
-      case 'New':
-        return <NewGame handleClick={() => changeView("game-start")} />;
-      case 'game-start':
-        return <GameStart gameStart={() => changeView("Player1")} settings={settings}/>;
-      case 'Player1':
-        return <Player playStat={player1} currRound={currRound} categories={categories} selectedCategory={selectedCategory1} player={1}/>;
-      case 'Player2':
-        return <Player playStat={player2} currRound={currRound} categories={categories} selectedCategory={selectedCategory2} player={2}/>
-      case 'QuestionsView1':
-        return <QuestionsView category={selCateg} currRound={currRound} playStat={player1} player={1}
-          qsPerRound={qsPerRound} level={level} next={(score: number) => nextPlayer(score)}/>;
-      case 'QuestionsView2':
-        return <QuestionsView category={selCateg} currRound={currRound} playStat={player2} player={2}
-          qsPerRound={qsPerRound} level={level} next={(score: number) => endRound(score)}/>;
-      case 'Game-Over':
-        return <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>;
-    }
-    }
+  // const renderView = () => {
+  //   switch (view) {
+  //     case 'New':
+  //       return <NewGame handleClick={() => changeView("game-start")} />;
+  //     case 'game-start':
+  //       return <GameStart gameStart={() => changeView("Player1")} settings={settings}/>;
+  //     case 'Player1':
+  //       return <Player playStat={player1} currRound={currRound} categories={categories} selectedCategory={selectedCategory1} player={1}/>;
+  //     case 'Player2':
+  //       return <Player playStat={player2} currRound={currRound} categories={categories} selectedCategory={selectedCategory2} player={2}/>;
+  //     case 'QuestionsView':
+  //       return <QuestionsView category={selCateg} currRound={currRound} playStat={player1} player={1}
+  //         qsPerRound={qsPerRound} level={level} next={(score: number) => nextPlayer(score)}/>;
+  //     case 'QuestionsView2':
+  //       return <QuestionsView category={selCateg} currRound={currRound} playStat={player2} player={2}
+  //         qsPerRound={qsPerRound} level={level} next={(score: number) => endRound(score)}/>;
+  //     case 'Game-Over':
+  //       return <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>;
+  //   }
+  //   }
     
     return (
       <div>
@@ -133,7 +133,15 @@ const App: FC = () => {
             }
           })()}
         <div>
-          <div>{renderView()}</div>
+          <div>{
+          view === 'New' ? <NewGame handleClick={() => changeView("game-start")} /> :
+          view === 'game-start' ? <GameStart gameStart={() => changeView("Player1")} settings={settings}/> :
+          view.includes('Player') ? <Player playStat={view === 'Player1' ? player1 : player2} currRound={currRound}
+            categories={categories} selectedCategory={selectedCategory1} player={view === 'Player1' ? 1 : 2}/> :
+          view.includes('QuestionsView') ? <QuestionsView category={selCateg} currRound={currRound} playStat={view === 'Player1' ? player1 : player2} player={view === 'Player1' ? 1 : 2}
+          qsPerRound={qsPerRound} level={level} next={(score: number) => view === 'QuestionsView1' ? nextPlayer(score) : endRound(score)}/> :
+          <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>
+          }</div>
         </div>
     </div>
     )

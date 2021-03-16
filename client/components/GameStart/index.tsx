@@ -30,7 +30,7 @@ const GameStart: FC<IProps> = (props) => {
 
 
   const onStart = () => {
-    props.settings(name1, name2, length, numQs, level)
+    props.settings(name1, name2, length, numQs, level.toLowerCase())
     props.gameStart()
     // console.log(this.state.name1, this.state.name2, this.state.length);
   }
