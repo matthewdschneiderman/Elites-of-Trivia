@@ -5,7 +5,7 @@ interface IProps {
   currRound: number,
   categories: ICategory[],
   playStat: IPlayer,
-  selectedCategory: (id: number) => void,
+  selectedCategory: (id: number, name: string) => void,
   player: number
 }
 
@@ -30,7 +30,7 @@ const Player: React.FC<IProps> = (props) => {
         <div className={`name${props.player}-turn`}>{props.playStat.name}'s Turn</div>
       </div>
       <div className="cards">{props.categories.map((category: ICategory) => (
-          <div className="card" key={category.id} onClick={() => props.selectedCategory(category.id)}><span className="card-Qs"><div>{category.id - 8}.</div> {category.name}</span></div>
+          <div className="card" key={category.id} onClick={() => props.selectedCategory(category.id, category.name)}><span className="card-Qs">{category.name}</span></div>
         ))} 
       </div>
     </div>

@@ -21,6 +21,7 @@ const App: FC = () => {
     const [categories, setCategories] = useState<ICategory[]>()
     const [selCateg, setSelCateg] = useState<number>()
     const [level, setLevel] = useState<string>("easy")
+    const [catName, setCatName] = useState<string>()
   
     useEffect(() => {
       axios({
@@ -43,14 +44,16 @@ const App: FC = () => {
       setLevel(level);
     }
 
-    const selectedCategory1 = (category: number) => {
+    const selectedCategory1 = (category: number, name: string) => {
         setSelCateg(category),
+        setCatName(name)
         setView('QuestionsView1')
     }
 
 
-    const selectedCategory2 = (category: number) => {
+    const selectedCategory2 = (category: number, name: string) => {
       setSelCateg(category),
+      setCatName(name),
       setView('QuestionsView2')
     }
 
@@ -100,10 +103,10 @@ const App: FC = () => {
       case 'Player2':
         return <Player playStat={player2} currRound={currRound} categories={categories} selectedCategory={selectedCategory2} player={2}/>
       case 'QuestionsView1':
-        return <QuestionsView category={selCateg} currRound={currRound} playStat={player1} player={1}
+        return <QuestionsView category={selCateg} catName={catName} currRound={currRound} playStat={player1} player={1}
           qsPerRound={qsPerRound} level={level} next={(score: number) => nextPlayer(score)}/>;
       case 'QuestionsView2':
-        return <QuestionsView category={selCateg} currRound={currRound} playStat={player2} player={2}
+        return <QuestionsView category={selCateg} catName={catName} currRound={currRound} playStat={player2} player={2}
           qsPerRound={qsPerRound} level={level} next={(score: number) => endRound(score)}/>;
       case 'Game-Over':
         return <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>;

@@ -6,6 +6,16 @@ const opentdb = require('opentdb-api');
 
 const port = process.env.PORT || 4100;
 
+const cleanCat = (cat) => {
+  var clean = cat;
+  var colon = clean.name.indexOf(':');
+
+  if (colon > -1) {
+    clean.name = clean.name.slice(colon + 1);
+  }
+  return clean;
+};
+
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/opentdb', (req, res) => {
@@ -13,6 +23,9 @@ app.get('/opentdb', (req, res) => {
     opentdb
       .getCategories()
       .then((result) => {
+        for (var category of result) {
+          category = cleanCat(category);
+        }
         res.status(200).send(result);
       })
       .catch((err) => console.log(err));
@@ -23,8 +36,16 @@ app.get('/opentdb', (req, res) => {
         var Trivia = [];
         for (var result of results) {
           var answers = result.incorrect_answers;
-          answers.splice(Math.floor(Math.random() * 4), 0, result.correct_answer);
-          Trivia.push({question: result.question, answers: answers, correct: result.correct_answer});
+          answers.splice(
+            Math.floor(Math.random() * 4),
+            0,
+            result.correct_answer
+          );
+          Trivia.push({
+            question: result.question,
+            answers: answers,
+            correct: result.correct_answer,
+          });
         }
         res.status(200).send(Trivia);
       })

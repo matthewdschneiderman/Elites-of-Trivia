@@ -16,7 +16,8 @@ interface IProps {
   playStat: IPlayer,
   currRound: number,
   next: (roundScore: number) => void,
-  player: number
+  player: number,
+  catName: string,
 }
 
 const QuestionsView: React.FC<IProps> = (props) => {
@@ -89,6 +90,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
   } else {
     return (
       <div>
+        {console.log(props)}
         <div className="player-turn">
           <div className="round-track">
             <span className="span-align">Round <div>{props.currRound}</div></span>
@@ -99,7 +101,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
           </div>
         </div>
         <div className="question-container">
-          <div className="category"><span>{props.category}</span></div>
+          <div className="category"><span>{props.catName}</span></div>
           <div className="question-style">{questions[count].question}</div>
           <div className="answer-choices">{questions[count].answers.map((answer) => {
             return <button className="all-answers" key={answer} value={answer} disabled={questionAnswered} onClick={showAnswer}
