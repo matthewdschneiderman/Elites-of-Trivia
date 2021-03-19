@@ -116,7 +116,7 @@ const App: FC = () => {
     return (
       <div>
         <div className="header">
-          <div className="title">MVP of Trivia</div>
+          <div className="title">Elites of Trivia</div>
         </div>
         {(() => {
           if (view !== 'New' &&  view !== 'game-start') {

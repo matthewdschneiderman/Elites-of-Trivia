@@ -1,5 +1,5 @@
 {
-  "name": "mvp-demo",
+  "name": "elites-of-trivia",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/matthewdschneiderman/MVP-Demo.git"
+    "url": "git+https://github.com/matthewdschneiderman/Elites-of-Trivia"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/matthewdschneiderman/MVP-Demo/issues"
+    "url": "https://github.com/matthewdschneiderman/Elites-of-Trivia/issues"
   },
-  "homepage": "https://github.com/matthewdschneiderman/MVP-Demo#readme",
+  "homepage": "https://github.com/matthewdschneiderman/Elites-of-Trivia#readme",
   "babel": {
     "presets": [
       "@babel/preset-env"
