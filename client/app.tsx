@@ -44,18 +44,19 @@ const App: FC = () => {
       setLevel(level);
     }
 
-    const selectedCategory1 = (category: number, name: string) => {
+    const selectedCategory = (category: number, name: string, diff: string) => {
         setSelCateg(category),
         setCatName(name)
+        setLevel(diff);
         setView('QuestionsView1')
     }
 
 
-    const selectedCategory2 = (category: number, name: string) => {
-      setSelCateg(category),
-      setCatName(name),
-      setView('QuestionsView2')
-    }
+    // const selectedCategory2 = (category: number, name: string) => {
+    //   setSelCateg(category),
+    //   setCatName(name),
+    //   setView('QuestionsView2')
+    // }
 
     const changeView = (option: string) => {
         setView(option)
@@ -140,7 +141,7 @@ const App: FC = () => {
           view === 'New' ? <NewGame handleClick={() => changeView("game-start")} /> :
           view === 'game-start' ? <GameStart gameStart={() => changeView("Player1")} settings={settings}/> :
           view.includes('Player') ? <Player playStat={view === 'Player1' ? player1 : player2} currRound={currRound}
-            categories={categories} selectedCategory={selectedCategory1} player={view === 'Player1' ? 1 : 2}/> :
+            categories={categories} selectedCategory={selectedCategory} player={view === 'Player1' ? 1 : 2}/> :
           view.includes('QuestionsView') ? <QuestionsView category={selCateg} catName={catName} currRound={currRound} playStat={view === 'Player1' ? player1 : player2} player={view === 'Player1' ? 1 : 2}
           qsPerRound={qsPerRound} level={level} next={(score: number) => view === 'QuestionsView1' ? nextPlayer(score) : endRound(score)}/> :
           <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>

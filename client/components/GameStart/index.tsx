@@ -71,7 +71,7 @@ const GameStart: FC<IProps> = (props) => {
                   );
                 })}
               </div>
-              <div className='rule-container' onChange={(e: any) => setLevel(e.target.value)}>
+              {/* <div className='rule-container' onChange={(e: any) => setLevel(e.target.value)}>
                 <div className="options">Difficulty?</div>
                 {diffs.map((diff) => {
                   return (
@@ -81,7 +81,7 @@ const GameStart: FC<IProps> = (props) => {
                       </span>
                   );
                 })}
-              </div>
+              </div> */}
             </div>
             <button className="btn" onClick={onStart}>Start Game</button>
         </div>
