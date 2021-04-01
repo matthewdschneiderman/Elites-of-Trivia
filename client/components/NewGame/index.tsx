@@ -1,14 +1,39 @@
-import React from "react";
-// import './main.scss'
+import React, { useState, useEffect } from "react";
+import ActiveGames from './ActiveGames';
+import Preferences from './Preferences';
 
 interface IProps {
   handleClick: () => void
 }
 
+export interface Prefs {
+  rounds: number,
+  questions: number,
+  time: number
+}
+
+export interface GameList {
+
+}
+
 const NewGame: React.FC<IProps> = ({handleClick}) => {
+
+  const [prefs, setPrefs] = useState<Prefs>({rounds: null, questions: null, time: null});
+  const [list, setList] = useState<GameList>(null);
+
   return (
-    <div className="newContainer">
-      <h1>Welcome to the Most Thrilling Experiance of Trivia!</h1>
+    <div>
+      <Preferences setPrefs={setPrefs}/>
+      <ActiveGames list={list} handleClick={handleClick}/>
+    </div>
+  )
+}
+
+export default NewGame;
+
+
+/*
+<h1>Welcome to the Most Thrilling Experiance of Trivia!</h1>
       <h2 className="underlined">About:</h2>
       <div>
       <h3>1. 2 Player Multiple Choice Triva Game</h3>
@@ -21,8 +46,4 @@ const NewGame: React.FC<IProps> = ({handleClick}) => {
       </div>
       <h2>Click Below to Set the Options and Get Started</h2>
       <button className="btn" onClick={handleClick}>New Game</button>
-    </div>
-  )
-}
-
-export default NewGame;
+      */

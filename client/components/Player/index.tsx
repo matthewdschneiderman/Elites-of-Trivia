@@ -51,6 +51,7 @@ const Player: React.FC<IProps> = (props) => {
             <div className={choosingDiff === category.id ? 'diffDiv' : 'card'} key={category.id} onClick={choosingDiff === category.id ? null : () => setChoosingDiff(category.id)}>
               {choosingDiff === category.id ?
               <div>
+              {}
               {diffCard({id: category.id, name: category.name, selectedCategory: props.selectedCategory, diff: 'easy'})}
               {diffCard({id: category.id, name: category.name, selectedCategory: props.selectedCategory, diff: 'medium'})}
               {diffCard({id: category.id, name: category.name, selectedCategory: props.selectedCategory, diff: 'hard'})}
