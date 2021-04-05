@@ -7,9 +7,10 @@ interface IProps {
 }
 
 export interface Prefs {
-  rounds: number,
-  questions: number,
-  time: number
+  [index: string]: number | string,
+  Rounds: number,
+  Questions: number,
+  Time: number
 }
 
 export interface GameList {
@@ -18,12 +19,18 @@ export interface GameList {
 
 const NewGame: React.FC<IProps> = ({handleClick}) => {
 
-  const [prefs, setPrefs] = useState<Prefs>({rounds: null, questions: null, time: null});
+  const [prefs, setPrefs] = useState<Prefs>({Rounds: 3, Questions: 2, Time: 15});
   const [list, setList] = useState<GameList>(null);
+  
+
+  useEffect (() => {
+    console.log(prefs);
+  }, [prefs]);
 
   return (
-    <div>
-      <Preferences setPrefs={setPrefs}/>
+    <div className='home'>
+      {prefs.Rounds} {prefs.Questions} {prefs.Time}
+      <Preferences prefs={prefs} setPrefs={setPrefs}/>
       <ActiveGames list={list} handleClick={handleClick}/>
     </div>
   )

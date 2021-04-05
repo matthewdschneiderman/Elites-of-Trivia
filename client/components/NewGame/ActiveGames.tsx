@@ -9,7 +9,7 @@ interface IProps {
 
 const ActiveGames: React.FC<IProps> = (props) => {
   return (
-    <div onClick={props.handleClick}>
+    <div className='lobby' onClick={props.handleClick}>
       new game
     </div>
   )
