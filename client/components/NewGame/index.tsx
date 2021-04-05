@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ActiveGames from './ActiveGames';
 import Preferences from './Preferences';
+import axios from 'axios';
 
 interface IProps {
   handleClick: () => void
@@ -13,24 +14,39 @@ export interface Prefs {
   Time: number
 }
 
-export interface GameList {
-
+export interface Game {
+  user: string,
+  prefs: Prefs
 }
 
 const NewGame: React.FC<IProps> = ({handleClick}) => {
 
-  const [prefs, setPrefs] = useState<Prefs>({Rounds: 3, Questions: 2, Time: 15});
-  const [list, setList] = useState<GameList>(null);
+  const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
+  const [list, setList] = useState<Game[]>([]);
+  const [change, setChange] = useState<Boolean>(false)
   
 
   useEffect (() => {
-    console.log(prefs);
-  }, [prefs]);
+    axios({
+      url: '/games',
+      method: 'get',
+      params: {
+        prefs: prefs
+      }
+    }).then((result: any) => {
+      setList(result.data);
+    });
+  }, [change]);
+
+  const onClick = (newPrefs: Prefs) => {
+    setPrefs(newPrefs);
+    setChange(!change)
+  }
+
 
   return (
     <div className='home'>
-      {prefs.Rounds} {prefs.Questions} {prefs.Time}
-      <Preferences prefs={prefs} setPrefs={setPrefs}/>
+      <Preferences prefs={prefs} setPrefs={onClick}/>
       <ActiveGames list={list} handleClick={handleClick}/>
     </div>
   )

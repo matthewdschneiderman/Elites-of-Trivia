@@ -18,6 +18,17 @@ const cleanCat = (cat) => {
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
+const games = [
+  { user: 'Matt', prefs: { Rounds: 3, Questions: 5, Time: 45 } },
+  { user: 'Noah', prefs: { Rounds: 5, Questions: 2, Time: 15 } },
+];
+
+app.get('/games', (req, res) => {
+  console.log(req.query.prefs);
+  res.status(200).send(games);
+});
+
+// Trivia Call
 app.get('/opentdb', (req, res) => {
   if (req.query.method === 'categories') {
     opentdb

@@ -23,14 +23,13 @@ const Preferences: React.FC<IProps> = (props) => {
     <div className='prefs'>
       {options.map((option) => {
         return <div className='prefCol' key={option.title}>
-          <div style={{width: '100%', height: '20%', border: '1px solid black', backgroundColor: 'white'}}>
+          <div style={{width: '100%', height: '8%', border: '1px solid black', backgroundColor: 'white'}}>
             {option.title}
             </div>
           {option.set.map((pref) => {
           return <div className={props.prefs[option.title] === pref ? 'selectedPref' : 'prefItem'} key={pref} onClick={() => {
             var newPrefs = props.prefs;
             newPrefs[option.title] = pref;
-            //console.log(newPrefs);
             props.setPrefs(newPrefs);
           }}>
             {pref}
