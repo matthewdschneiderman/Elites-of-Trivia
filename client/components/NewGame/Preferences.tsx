@@ -27,10 +27,11 @@ const Preferences: React.FC<IProps> = (props) => {
             {option.title}
             </div>
           {option.set.map((pref) => {
-          return <div className={props.prefs[option.title] === pref ? 'selectedPref' : 'prefItem'} key={pref} onClick={() => {
-            var newPrefs = props.prefs;
-            newPrefs[option.title] = pref;
-            props.setPrefs(newPrefs);
+            var selected: Boolean = props.prefs[option.title] === pref;
+              return <div className={selected ? 'selectedPref' : 'prefItem'} key={pref} onClick={() => {
+                var newPrefs = props.prefs;
+                newPrefs[option.title] = selected ? null : pref;
+                props.setPrefs(newPrefs);
           }}>
             {pref}
             </div>
