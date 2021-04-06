@@ -4,8 +4,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/trivia', {
   useUnifiedTopology: true,
 });
 
-var lobby = mongoose.model(
-  'lobby',
+const activegames = mongoose.model(
+  'activegames',
   new mongoose.Schema({
     user: String,
     prefs: {
@@ -16,11 +16,10 @@ var lobby = mongoose.model(
   })
 );
 
-module.exports = (req, res) => {
+module.exports.get = (req, res) => {
   console.log(req.query.prefs);
-  // lobby.insertMany(games);
   var prefs = JSON.parse(req.query.prefs);
-  lobby
+  activegames
     .find({
       'prefs.Rounds': {
         $in: prefs.Rounds === null ? [3, 5, 7, 10] : [prefs.Rounds],
@@ -40,3 +39,12 @@ module.exports = (req, res) => {
       console.log(err);
     });
 };
+
+module.exports.post = (req, res) => {
+    console.log(req.query);
+    var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs)};
+    activegames
+        .insertMany(game)
+        .then(() => res.status(200).send(true))
+        .catch(() => res.status(200).send(false));
+}

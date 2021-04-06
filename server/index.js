@@ -8,7 +8,9 @@ const port = process.env.PORT || 4100;
 
 app.use(express.static(path.join(__dirname, '../dist')));
 
-app.get('/games', lobby);
+app.get('/games', lobby.get);
+
+app.post('/games', lobby.post);
 
 app.get('/opentdb', trivia);
 

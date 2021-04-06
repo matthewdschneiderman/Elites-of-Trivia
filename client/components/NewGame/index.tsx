@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ActiveGames from './ActiveGames';
 import Preferences from './Preferences';
 import axios from 'axios';
+import { userInfo } from "node:os";
 
 interface IProps {
   handleClick: () => void
@@ -21,9 +22,10 @@ export interface Game {
 
 const NewGame: React.FC<IProps> = ({handleClick}) => {
 
+  const [user, setUser] = useState<String>(`player${Math.random().toFixed(5)}`);
   const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
   const [list, setList] = useState<Game[]>([]);
-  const [change, setChange] = useState<Boolean>(false)
+  const [change, setChange] = useState<Boolean>(false);
   
 
   useEffect (() => {
@@ -48,6 +50,26 @@ const NewGame: React.FC<IProps> = ({handleClick}) => {
     <div className='home'>
       <Preferences prefs={prefs} setPrefs={onClick}/>
       <ActiveGames list={list} handleClick={handleClick}/>
+      {prefs.Rounds !== null && prefs.Questions !== null && prefs.Time !== null ?
+      <div className='createGame' onClick={() => {
+        axios({
+          url: '/games',
+          method: 'post',
+          params: {
+            user: user,
+            prefs: prefs
+          }
+        }).then((result: any) => {
+          if (result.data) {
+            setChange(!change);
+          } else {
+            console.log('Error creating game')
+          }
+        });
+      }}>
+        Create Game as {user}
+      </div>
+      : null}
     </div>
   )
 }
