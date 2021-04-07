@@ -41,7 +41,7 @@ module.exports.post = (req, res) => {
     console.log(req.query);
     var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs)};
     activegames.findOne({user: game.user}).then((data) => {
-      console.log(data);
+      // console.log(data);
       if (data === null) {
         activegames
           .insertMany(game)
@@ -49,9 +49,9 @@ module.exports.post = (req, res) => {
             // console.log('id: ', data[0]._id);
             res.status(200).send(data[0]._id);
           })
-          .catch(() => res.status(200).send(null));
+          .catch(() => res.status(403).send());
       } else {
-        res.status(200).send(null);
+        res.status(403).send();
       }
       })
 }
