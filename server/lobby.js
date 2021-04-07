@@ -17,22 +17,19 @@ const activegames = mongoose.model(
 );
 
 module.exports.get = (req, res) => {
-  console.log(req.query.prefs);
+  // console.log(req.query.prefs);
   var prefs = JSON.parse(req.query.prefs);
   activegames
     .find({
-      'prefs.Rounds': {
-        $in: prefs.Rounds === null ? [3, 5, 7, 10] : [prefs.Rounds],
-      },
-      'prefs.Questions': {
-        $in: prefs.Questions === null ? [2, 3, 4, 5] : [prefs.Questions],
-      },
-      'prefs.Time': {
-        $in: prefs.Time === null ? [15, 30, 45, 60] : [prefs.Time],
-      },
+      'prefs.Rounds': prefs.Rounds === null ? {
+        $in: [3, 5, 7, 10] } : prefs.Rounds,
+      'prefs.Questions': prefs.Questions === null ? {
+        $in: [2, 3, 4, 5] } : prefs.Questions,
+      'prefs.Time': prefs.Time === null ? {
+        $in: [15, 30, 45, 60] } : prefs.Time
     })
     .then((data) => {
-      // console.log(data);
+      //console.log(data);
       res.status(200).send(data);
     })
     .catch((err) => {
@@ -43,8 +40,18 @@ module.exports.get = (req, res) => {
 module.exports.post = (req, res) => {
     console.log(req.query);
     var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs)};
-    activegames
-        .insertMany(game)
-        .then(() => res.status(200).send(true))
-        .catch(() => res.status(200).send(false));
+    activegames.findOne({user: game.user}).then((data) => {
+      console.log(data);
+      if (data === null) {
+        activegames
+          .insertMany(game)
+          .then((data) => {
+            // console.log('id: ', data[0]._id);
+            res.status(200).send(data[0]._id);
+          })
+          .catch(() => res.status(200).send(null));
+      } else {
+        res.status(200).send(null);
+      }
+      })
 }

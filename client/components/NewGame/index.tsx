@@ -60,7 +60,9 @@ const NewGame: React.FC<IProps> = ({handleClick}) => {
             prefs: prefs
           }
         }).then((result: any) => {
-          if (result.data) {
+          if (result.data !== null) {
+            // replace with waiting screen in new socket
+            console.log(result.data);
             setChange(!change);
           } else {
             console.log('Error creating game')
