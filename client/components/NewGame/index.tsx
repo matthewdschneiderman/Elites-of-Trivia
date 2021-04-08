@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ActiveGames from './ActiveGames';
 import Preferences from './Preferences';
 import axios from 'axios';
-import { userInfo } from "node:os";
+// import { userInfo } from "node:os";
 
 interface IProps {
   handleClick: () => void
