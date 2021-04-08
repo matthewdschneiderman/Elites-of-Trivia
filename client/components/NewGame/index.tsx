@@ -3,9 +3,11 @@ import ActiveGames from './ActiveGames';
 import Preferences from './Preferences';
 import axios from 'axios';
 // import { userInfo } from "node:os";
+import { ProgressPlugin } from "webpack";
+import { isPropertySignature } from "typescript";
 
 interface IProps {
-  handleClick: () => void
+  handleClick: (_id: string) => void
 }
 
 export interface Prefs {
@@ -16,6 +18,7 @@ export interface Prefs {
 }
 
 export interface Game {
+  _id: string,
   user: string,
   prefs: Prefs
 }
@@ -60,14 +63,10 @@ const NewGame: React.FC<IProps> = ({handleClick}) => {
             prefs: prefs
           }
         }).then((result: any) => {
-          if (result.data !== null) {
             // replace with waiting screen in new socket
-            console.log(result.data);
-            setChange(!change);
-          } else {
-            console.log('Error creating game')
-          }
-        });
+            handleClick(result.data);
+        })
+        .catch(() => console.log('Error creating game'));
       }}>
         Create Game as {user}
       </div>

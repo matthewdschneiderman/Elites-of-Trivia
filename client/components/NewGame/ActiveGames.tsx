@@ -4,20 +4,20 @@ import { Game } from './index';
 
 interface IProps {
   list: Game[]
-  handleClick: () => void
+  handleClick: (_id: string) => void
 }
 
 const ActiveGames: React.FC<IProps> = (props) => {
 
   return (
-    <div className='lobby' onClick={props.handleClick}>
+    <div className='lobby'>
       <div style={{backgroundColor: 'white', width: '100%', paddingBottom: '5px'}}>Username
       <div style={{float: 'right'}}>
       Rounds&emsp;Questions&emsp;Time
       </div>
       </div>
       {props.list.map((game: Game) => {
-        return <div className='activeGame' key={game.user}>
+        return <div className='activeGame' key={game.user} onClick={() => props.handleClick(game._id)}>
           {game.user}
           <div style={{float: 'right'}}>
             {Object.values(game.prefs).map((pref: string | Number) => {
