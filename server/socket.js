@@ -8,12 +8,13 @@ const io = require('socket.io')(server, {
     // origin: 'http://18.224.228.145:80',
     origin: 'localhost:4100',
     credentials: true,
-    transport : ['websocket'],
+    allowedHeaders: ['activegames'],
+    methods: ['GET', 'POST'],
   },
 });
 
 io.on('connection', (socket) => {
-  console.log('connected')
+  console.log('connected');
   socket.on('disconnect', (reason) => {
     console.log('disconnected');
   });

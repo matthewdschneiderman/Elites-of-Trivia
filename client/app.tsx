@@ -1,6 +1,7 @@
 import React, { useEffect, useState, FC } from "react";
 import Game from './components/Game/index'
 import NewGame from './components/NewGame/index'
+import axios from 'axios';
 // import GameStart from './components/GameStart/index'
 // import Player, { ICategory, IPlayer } from './components/Player/index'
 // import QuestionsView from './components/QuestionsView/index'
@@ -12,6 +13,17 @@ import NewGame from './components/NewGame/index'
 const App: FC = () => {
 
     const [roomId, setRoomId] = useState<string>(null)
+
+    const backClick = () => {
+      axios({
+        url: '/games',
+        method: 'delete',
+        params: {
+          prefs: roomId
+        }
+      })
+      setRoomId(null);
+    }
     
     return (
       <div>
@@ -22,7 +34,7 @@ const App: FC = () => {
           roomId === null ? <NewGame handleClick={(_id: string) => {
             setRoomId(_id);
           }} /> :
-          <Game roomId={roomId}/>
+          <Game roomId={roomId} backClick={backClick}/>
         }
           </div>
     </div>

@@ -10,17 +10,19 @@ const io = require('socket.io-client');
 
 interface IProps {
     roomId: string
+    backClick: () => void;
 }
 
 
 const Game: FC<IProps> = (props) => {
 
-    const socket = io('localhost:4100', {
+    const socket = io('localhost:5000', {
       "secure": true,
       "force new connection" : true,
       "reconnectionAttempts": "10", //avoid having user reconnect manually in order to prevent dead clients after a server restart
       "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
-      "transports": ["polling"],
+      "transports" : ["websocket"],
+      // 'transports': ['polling']
   });
 
     // const [inRoom, setInRoom] = useState(false);
@@ -115,6 +117,7 @@ const Game: FC<IProps> = (props) => {
         <div>
             {view === 'waiting' ? <div className='waiting'>
                 Waiting for opponent
+                <button onClick={props.backClick}>Go Back to Lobby</button>
             </div> :
             <div className='game'>Player has joined!</div>}
 {/* {(() => {

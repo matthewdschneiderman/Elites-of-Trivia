@@ -49,6 +49,7 @@ const NewGame: React.FC<IProps> = ({handleClick}) => {
   }
 
 
+
   return (
     <div className='home'>
       <Preferences prefs={prefs} setPrefs={onClick}/>
