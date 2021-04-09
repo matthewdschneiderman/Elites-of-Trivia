@@ -4,6 +4,7 @@ import GameStart from './GameStart/index'
 import Player, { ICategory, IPlayer } from './Player/index'
 import QuestionsView from './QuestionsView/index'
 import GameOver from './GameOver/index'
+import { isJsxOpeningFragment } from 'typescript';
 const io = require('socket.io-client');
 
 // import './main.scss';
@@ -11,6 +12,7 @@ const io = require('socket.io-client');
 interface IProps {
     roomId: string
     backClick: () => void;
+    joinGame: () => void;
 }
 
 
@@ -38,17 +40,8 @@ const Game: FC<IProps> = (props) => {
     const [catName, setCatName] = useState<string>()
 
     useEffect(() => {
-        // if (!inRoom) {
-          socket.emit('join room', {room: props.roomId});
-          // setInRoom(true)
-        // }
+      props.joinGame()
     }, []);
-
-    const leaveRoom = () => {
-        socket.emit('leave room', {
-          room: props.roomId
-        })
-      }
 
     // useEffect(() => {
     //     axios({

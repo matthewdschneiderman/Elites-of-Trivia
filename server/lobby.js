@@ -73,6 +73,7 @@ module.exports.delete = (req, res) => {
   activegames
     .deleteOne({ _id: req.query.prefs })
     .then(() => {
+      // console.log('deleted!', req.query.prefs);
       res.sendStatus(200);
     })
     .catch(() => {
