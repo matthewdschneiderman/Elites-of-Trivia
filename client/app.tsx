@@ -9,6 +9,18 @@ const io = require('socket.io-client');
 // import GameOver from './components/GameOver/index'
 
 
+export interface Prefs {
+  [index: string]: number | string,
+  Rounds: number,
+  Questions: number,
+  Time: number
+}
+
+export interface Game {
+  _id: string,
+  user: string,
+  prefs: Prefs
+}
 
 
 const App: FC = () => {
@@ -23,6 +35,47 @@ const App: FC = () => {
   });
 
     const [roomId, setRoomId] = useState<string>(null)
+    // const [refreshGames, setRefreshGames] = useState<boolean>(false)
+    const [change, setChange] = useState<Boolean>(false);
+    const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
+    const [list, setList] = useState<Game[]>([]);
+
+
+    // useEffect(() => {
+    //   socket.on('update', () => {
+    //     setRefreshGames(!refreshGames);
+    //     console.log('updates happened')
+    //   })
+    // })
+
+    const getGames = () => {
+      axios({
+        url: '/games',
+        method: 'get',
+        params: {
+          prefs: prefs
+        }
+      }).then((result: any) => {
+        setList(result.data);
+      });
+    }
+
+    useEffect (() => {
+      getGames()
+    }, [change, roomId]);
+  
+    const onPrefClick = (newPrefs: Prefs) => {
+      setPrefs(newPrefs);
+      setChange(!change)
+    }
+    
+    useEffect(() => {
+      socket.on('update', (data: any) => {
+        console.log('hello', data)
+      })
+      setChange(!change)
+    }, [])
+    
 
     const joinGame = () => {
       socket.emit('join room', {room: roomId});
@@ -51,7 +104,7 @@ const App: FC = () => {
           <div>{
           roomId === null ? <NewGame handleClick={(_id: string) => {
             setRoomId(_id);
-          }} /> :
+          }} prefs={prefs} onPrefClick={onPrefClick} list={list}/> :
           <Game roomId={roomId} backClick={backClick} joinGame={joinGame}/>
         }
           </div>

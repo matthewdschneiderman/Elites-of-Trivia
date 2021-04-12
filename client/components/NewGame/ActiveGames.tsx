@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Game } from './index';
 // import './main.scss'
 
@@ -8,6 +8,8 @@ interface IProps {
 }
 
 const ActiveGames: React.FC<IProps> = (props) => {
+
+
 
   return (
     <div className='lobby'>

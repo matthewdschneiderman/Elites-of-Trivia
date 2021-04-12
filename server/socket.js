@@ -14,7 +14,7 @@ const io = require('socket.io')(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log('connected');
+  // console.log('connected');
   socket.on('disconnect', (reason) => {
     console.log('disconnected');
   });
@@ -22,7 +22,13 @@ io.on('connection', (socket) => {
   socket.on('join room', (data) => {
     console.log('a user connected', data);
     socket.join(data.room);
+    socket.emit('update', data);
   });
+
+  // socket.on('update', (data) => {
+  //   socket.emit('update');
+  //   console.log('upupup');
+  // });
 
   socket.on('leave room', (data) => {
     console.log('a user disconnected');

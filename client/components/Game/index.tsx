@@ -10,7 +10,7 @@ const io = require('socket.io-client');
 // import './main.scss';
 
 interface IProps {
-    roomId: string
+    roomId: string;
     backClick: () => void;
     joinGame: () => void;
 }
