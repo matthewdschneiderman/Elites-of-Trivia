@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('create game', (data) => {
-    games.post(data.room, {
+    games.create({room: data.room,
       player1: data.player1,
       player2: null,
       prefs: data.prefs});
@@ -46,10 +46,11 @@ io.on('connection', (socket) => {
 
   socket.on('full house', (data) => {
     console.log(`Room ${data.room} is full`);
-    games.get(data.room, (result) => {
+    games.join({room: data.room, player2: data.player2}, (result) => {
+      console.log(result);
       socket.to(data.room).emit('action', {
         method: 'start game',
-        data: result.data
+        data: result
       })
     })
   });
