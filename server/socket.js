@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const port = 5000;
-const games = require('./games');
 var server = require('http').createServer(app);
 console.log('Socket.io running on port 5000');
 
@@ -28,10 +27,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('create game', (data) => {
-    games.create({room: data.room,
-      player1: data.player1,
-      player2: null,
-      prefs: data.prefs});
+    // games.create({room: data.room,
+    //   player1: data.player1,
+    //   player2: null,
+    //   prefs: data.prefs});
   });
 
   socket.on('lobbyUpdate', () => {
@@ -46,13 +45,13 @@ io.on('connection', (socket) => {
 
   socket.on('full house', (data) => {
     console.log(`Room ${data.room} is full`);
-    games.join({room: data.room, player2: data.player2}, (result) => {
-      console.log(result);
-      socket.to(data.room).emit('action', {
-        method: 'start game',
-        data: result
-      })
-    })
+    // games.join({room: data.room, player2: data.player2}, (result) => {
+    //   console.log(result);
+    //   socket.to(data.room).emit('action', {
+    //     method: 'start game',
+    //     data: result
+    //   })
+    // })
   });
 
   // socket.on('new message', (data) => {

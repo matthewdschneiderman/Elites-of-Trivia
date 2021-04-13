@@ -90,22 +90,24 @@ const App: FC = () => {
             setPlayer1(player);
             if (action) {
               socket.emit('lobbyUpdate');
-              socket.emit('create game', {player1: player1, prefs: prefs})
+              //socket.emit('create game', {player1: player1, prefs: prefs})
               setRoomId(_id);
               setChange(!change);
             } else {
               axios({
                 url: '/games',
-                method: 'delete',
+                method: 'join',
                 params: {
-                  prefs: _id
+                  join: true,
+                  room: _id,
+                  user: player2
                 }
               })
               .then(() => {
                 socket.emit('lobbyUpdate');
                 setRoomId(_id);
                 setChange(!change);
-                socket.emit('full house', {room: _id, player2: player2})
+                //socket.emit('full house', {room: _id, player2: player2});
               })
             }
           }} change={change}/> :

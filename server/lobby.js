@@ -4,10 +4,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/trivia', {
   useUnifiedTopology: true,
 });
 
-const opengames = mongoose.model(
-  'opengames',
+const activegames = mongoose.model(
+  'activegames',
   new mongoose.Schema({
     user: String,
+    guest: String,
+    full: Boolean,
     prefs: {
       Rounds: Number,
       Questions: Number,
@@ -19,8 +21,9 @@ const opengames = mongoose.model(
 module.exports.get = (req, res) => {
   // console.log(req.query.prefs);
   var prefs = JSON.parse(req.query.prefs);
-  opengames
+  activegames
     .find({
+      full: false,
       'prefs.Rounds':
         prefs.Rounds === null
           ? {
@@ -50,12 +53,17 @@ module.exports.get = (req, res) => {
 };
 
 module.exports.post = (req, res) => {
-  console.log(req.query);
-  var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs) };
-  opengames.findOne({ user: game.user }).then((data) => {
+  if (req.query.join === 'true') {
+    activegames.findByIdAndUpdate({ _id: req.query.room }, {full: true, guest: req.query.user})
+  .then(() => {
+    res.sendStatus(200);
+  });
+  } else {
+  var game = { user: req.query.user, guest: null, full: false, prefs: JSON.parse(req.query.prefs) };
+  activegames.findOne({ user: game.user }).then((data) => {
     // console.log(data);
     if (data === null) {
-      opengames
+      activegames
         .insertMany(game)
         .then((data) => {
           // console.log('id: ', data[0]._id);
@@ -66,12 +74,13 @@ module.exports.post = (req, res) => {
       res.status(403).send();
     }
   });
+}
 };
 
 module.exports.delete = (req, res) => {
   console.log('here', req.query);
-  opengames
-    .deleteOne({ _id: req.query.prefs })
+  activegames
+    .deleteOne({ _id: req.query.room })
     .then(() => {
       // console.log('deleted!', req.query.prefs);
       res.sendStatus(200);

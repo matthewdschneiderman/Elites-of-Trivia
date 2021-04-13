@@ -63,6 +63,7 @@ const NewGame: React.FC<IProps> = (props) => {
           url: '/games',
           method: 'post',
           params: {
+            join: false,
             user: user,
             prefs: prefs
           }
