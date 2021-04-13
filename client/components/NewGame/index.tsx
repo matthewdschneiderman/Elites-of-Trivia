@@ -8,9 +8,6 @@ import { isPropertySignature } from "typescript";
 
 interface IProps {
   handleClick: (_id: string) => void;
-  prefs: Prefs
-  onPrefClick: React.Dispatch<React.SetStateAction<Prefs>>
-  list: Game[]
 }
 
 export interface Prefs {
@@ -29,41 +26,40 @@ export interface Game {
 const NewGame: React.FC<IProps> = (props) => {
 
   const [user, setUser] = useState<String>(`player${Math.random().toFixed(5)}`);
-  // const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
-  // const [list, setList] = useState<Game[]>([]);
-  // const [change, setChange] = useState<Boolean>(false);
+  const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
+  const [list, setList] = useState<Game[]>([]);
+  const [change, setChange] = useState<Boolean>(false);
   
 
-  // useEffect (() => {
-  //   axios({
-  //     url: '/games',
-  //     method: 'get',
-  //     params: {
-  //       prefs: prefs
-  //     }
-  //   }).then((result: any) => {
-  //     setList(result.data);
-  //   });
-  // }, [change]);
+  useEffect (() => {
+    axios({
+      url: '/games',
+      method: 'get',
+      params: {
+        prefs: prefs
+      }
+    }).then((result: any) => {
+      setList(result.data);
+    });
+  }, [change]);
 
-  // const onClick = (newPrefs: Prefs) => {
-  //   setPrefs(newPrefs);
-  //   setChange(!change)
-  // }
-
+  const onClick = (newPrefs: Prefs) => {
+    setPrefs(newPrefs);
+    setChange(!change)
+  }
 
   return (
     <div className='home'>
-      <Preferences prefs={props.prefs} setPrefs={props.onPrefClick}/>
-      <ActiveGames list={props.list} handleClick={props.handleClick}/>
-      {props.prefs.Rounds !== null && props.prefs.Questions !== null && props.prefs.Time !== null ?
+      <Preferences prefs={prefs} setPrefs={onClick}/>
+      <ActiveGames list={list} handleClick={props.handleClick}/>
+      {prefs.Rounds !== null && prefs.Questions !== null && prefs.Time !== null ?
       <div className='createGame' onClick={() => {
         axios({
           url: '/games',
           method: 'post',
           params: {
             user: user,
-            prefs: props.prefs
+            prefs: prefs
           }
         }).then((result: any) => {
             // replace with waiting screen in new socket

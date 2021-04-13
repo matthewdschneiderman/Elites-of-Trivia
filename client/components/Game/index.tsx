@@ -18,14 +18,6 @@ interface IProps {
 
 const Game: FC<IProps> = (props) => {
 
-<<<<<<< HEAD
-    const socket = io('localhost:4100', {
-      // "secure": true,
-      "force new connection" : true,
-      "reconnectionAttempts": "10", //avoid having user reconnect manually in order to prevent dead clients after a server restart
-      "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
-      "transports": ["websocket"],
-=======
     const socket = io('localhost:5000', {
       "secure": true,
       "force new connection" : true,
@@ -33,7 +25,6 @@ const Game: FC<IProps> = (props) => {
       "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
       "transports" : ["websocket"],
       // 'transports': ['polling']
->>>>>>> 2cb65b0cc3013f0adf7e0a10879adda55be40a09
   });
 
     // const [inRoom, setInRoom] = useState(false);

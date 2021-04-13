@@ -35,46 +35,6 @@ const App: FC = () => {
   });
 
     const [roomId, setRoomId] = useState<string>(null)
-    // const [refreshGames, setRefreshGames] = useState<boolean>(false)
-    const [change, setChange] = useState<Boolean>(false);
-    const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
-    const [list, setList] = useState<Game[]>([]);
-
-
-    // useEffect(() => {
-    //   socket.on('update', () => {
-    //     setRefreshGames(!refreshGames);
-    //     console.log('updates happened')
-    //   })
-    // })
-
-    const getGames = () => {
-      axios({
-        url: '/games',
-        method: 'get',
-        params: {
-          prefs: prefs
-        }
-      }).then((result: any) => {
-        setList(result.data);
-      });
-    }
-
-    useEffect (() => {
-      getGames()
-    }, [change, roomId]);
-  
-    const onPrefClick = (newPrefs: Prefs) => {
-      setPrefs(newPrefs);
-      setChange(!change)
-    }
-    
-    useEffect(() => {
-      socket.on('update', (data: any) => {
-        console.log('hello', data)
-      })
-      setChange(!change)
-    }, [])
     
 
     const joinGame = () => {
@@ -104,7 +64,7 @@ const App: FC = () => {
           <div>{
           roomId === null ? <NewGame handleClick={(_id: string) => {
             setRoomId(_id);
-          }} prefs={prefs} onPrefClick={onPrefClick} list={list}/> :
+          }}/> :
           <Game roomId={roomId} backClick={backClick} joinGame={joinGame}/>
         }
           </div>
