@@ -16,11 +16,11 @@ interface IProps {
 const Game: FC<IProps> = (props) => {
 
     const socket = io('localhost:4100', {
-      "secure": true,
+      // "secure": true,
       "force new connection" : true,
       "reconnectionAttempts": "10", //avoid having user reconnect manually in order to prevent dead clients after a server restart
       "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
-      "transports": ["polling"],
+      "transports": ["websocket"],
   });
 
     // const [inRoom, setInRoom] = useState(false);
