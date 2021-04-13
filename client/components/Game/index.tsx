@@ -12,20 +12,12 @@ const io = require('socket.io-client');
 interface IProps {
     roomId: string;
     backClick: () => void;
-    joinGame: () => void;
+    player: string;
 }
 
 
 const Game: FC<IProps> = (props) => {
 
-    const socket = io('localhost:5000', {
-      "secure": true,
-      "force new connection" : true,
-      "reconnectionAttempts": "10", //avoid having user reconnect manually in order to prevent dead clients after a server restart
-      "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
-      "transports" : ["websocket"],
-      // 'transports': ['polling']
-  });
 
     // const [inRoom, setInRoom] = useState(false);
     const [view, setView] = useState<string>('waiting')
@@ -40,7 +32,7 @@ const Game: FC<IProps> = (props) => {
     const [catName, setCatName] = useState<string>()
 
     useEffect(() => {
-      props.joinGame()
+      
     }, []);
 
     // useEffect(() => {
@@ -109,7 +101,7 @@ const Game: FC<IProps> = (props) => {
     return (
         <div>
             {view === 'waiting' ? <div className='waiting'>
-                Waiting for opponent
+                Waiting for opponent, you are {props.player}
                 <button onClick={props.backClick}>Go Back to Lobby</button>
             </div> :
             <div className='game'>Player has joined!</div>}

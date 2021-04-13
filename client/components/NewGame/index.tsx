@@ -7,7 +7,8 @@ import { ProgressPlugin } from "webpack";
 import { isPropertySignature } from "typescript";
 
 interface IProps {
-  handleClick: (_id: string) => void;
+  handleClick: (_id: string, player: string, action: boolean) => void;
+  change: boolean;
 }
 
 export interface Prefs {
@@ -25,13 +26,17 @@ export interface Game {
 
 const NewGame: React.FC<IProps> = (props) => {
 
-  const [user, setUser] = useState<String>(`player${Math.random().toFixed(5)}`);
+  const [user, setUser] = useState<string>(`player${Math.random().toFixed(5)}`);
   const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
   const [list, setList] = useState<Game[]>([]);
   const [change, setChange] = useState<Boolean>(false);
   
 
   useEffect (() => {
+    getGames();
+  }, [change, props.change]);
+
+  const getGames = () => {
     axios({
       url: '/games',
       method: 'get',
@@ -41,7 +46,7 @@ const NewGame: React.FC<IProps> = (props) => {
     }).then((result: any) => {
       setList(result.data);
     });
-  }, [change]);
+  }
 
   const onClick = (newPrefs: Prefs) => {
     setPrefs(newPrefs);
@@ -63,7 +68,7 @@ const NewGame: React.FC<IProps> = (props) => {
           }
         }).then((result: any) => {
             // replace with waiting screen in new socket
-            props.handleClick(result.data);
+            props.handleClick(result.data, user, true);
         })
         .catch(() => console.log('Error creating game'));
       }}>

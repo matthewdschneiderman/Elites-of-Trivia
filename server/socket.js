@@ -19,16 +19,21 @@ io.on('connection', (socket) => {
     console.log('disconnected');
   });
 
+  socket.on('create room', (data) => {
+    console.log('a user connected', data);
+    socket.join(data.room);
+  });
+
   socket.on('join room', (data) => {
     console.log('a user connected', data);
     socket.join(data.room);
-    socket.emit('update', data);
+    socket.broacast.to(data.room).emit('start game');
   });
 
-  // socket.on('update', (data) => {
-  //   socket.emit('update');
-  //   console.log('upupup');
-  // });
+  socket.on('lobbyUpdate', () => {
+    console.log('the database changed');
+    socket.broadcast.to('lobby').emit('dbUpdate');
+  });
 
   socket.on('leave room', (data) => {
     console.log('a user disconnected');
