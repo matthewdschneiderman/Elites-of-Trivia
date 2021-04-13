@@ -36,18 +36,30 @@ const App: FC = () => {
 
     const [roomId, setRoomId] = useState<string>('lobby');
     const [change, setChange] = useState<boolean>(false);
-    const [player, setPlayer] = useState<string>('Anonymous');
+    const [player1, setPlayer1] = useState<string>('Anonymous');
+    const [player2, setPlayer2] = useState<string>('Anonymous');
+    const [view, setView] = useState<string>('waiting');
     
     useEffect(() => {
-
+      socket.emit('join room', {room: roomId});
     }, [change]);
 
-    if (roomId === 'lobby') {
-      socket.on('dbUpdate', () => {
-        setChange(!change)
-      });
-    } else {
-      
+
+    socket.on('lobby updated', () => {
+      console.log('the database changed');
+      if (roomId === 'lobby') {
+        setChange(!change);
+      }
+    });
+
+    socket.on('action', (options: any) => {
+      console.log(options);
+      changeView('game');
+    });
+
+    const changeView = (view: string) => {
+      setView(view);
+      setChange(!change);
     }
 
     const backClick = () => {
@@ -64,7 +76,6 @@ const App: FC = () => {
       .then(() => {
         socket.emit('lobbyUpdate');
         setRoomId('lobby');
-        socket.emit('join room', {room: 'lobby'});
         setChange(!change);
       })
     }
@@ -75,12 +86,12 @@ const App: FC = () => {
           <div className="title">Elites of Trivia</div>
         </div>
           <div>{
-          roomId === 'lobby' ? <NewGame handleClick={(_id: string, player: string, action: boolean) => {
-            setPlayer(player);
+          roomId === 'lobby' ? <NewGame handleClick={(_id: string, player: string, action: boolean, prefs: Prefs) => {
+            setPlayer1(player);
             if (action) {
               socket.emit('lobbyUpdate');
+              socket.emit('create game', {player1: player1, prefs: prefs})
               setRoomId(_id);
-              socket.emit('create room', {room: _id});
               setChange(!change);
             } else {
               axios({
@@ -93,12 +104,12 @@ const App: FC = () => {
               .then(() => {
                 socket.emit('lobbyUpdate');
                 setRoomId(_id);
-                socket.emit('join room', {room: _id});
                 setChange(!change);
+                socket.emit('full house', {room: _id, player2: player2})
               })
             }
           }} change={change}/> :
-          <Game player={player} roomId={roomId} backClick={backClick}/>
+          <Game player1={player1} player2={player2} roomId={roomId} backClick={backClick} view={view} setView={changeView}/>
         }
           </div>
     </div>

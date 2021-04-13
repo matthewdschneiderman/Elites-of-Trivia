@@ -7,7 +7,7 @@ import { ProgressPlugin } from "webpack";
 import { isPropertySignature } from "typescript";
 
 interface IProps {
-  handleClick: (_id: string, player: string, action: boolean) => void;
+  handleClick: (_id: string, player: string, action: boolean, prefs: Prefs) => void;
   change: boolean;
 }
 
@@ -68,7 +68,7 @@ const NewGame: React.FC<IProps> = (props) => {
           }
         }).then((result: any) => {
             // replace with waiting screen in new socket
-            props.handleClick(result.data, user, true);
+            props.handleClick(result.data, user, true, prefs);
         })
         .catch(() => console.log('Error creating game'));
       }}>

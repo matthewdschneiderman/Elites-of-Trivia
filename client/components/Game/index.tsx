@@ -12,7 +12,10 @@ const io = require('socket.io-client');
 interface IProps {
     roomId: string;
     backClick: () => void;
-    player: string;
+    player1: string;
+    player2: string;
+    view: string;
+    setView: (view: string) => void;
 }
 
 
@@ -20,7 +23,6 @@ const Game: FC<IProps> = (props) => {
 
 
     // const [inRoom, setInRoom] = useState(false);
-    const [view, setView] = useState<string>('waiting')
     const [player1, setPlayer1] = useState<IPlayer>({name: 'player1', score: 0})
     const [player2, setPlayer2] = useState<IPlayer>({name: 'player2', score: 0})
     const [qsPerRound, setQsPerRound] = useState<number>(2)
@@ -33,7 +35,7 @@ const Game: FC<IProps> = (props) => {
 
     useEffect(() => {
       
-    }, []);
+    }, [props.view]);
 
     // useEffect(() => {
     //     axios({
@@ -59,32 +61,32 @@ const Game: FC<IProps> = (props) => {
           setSelCateg(category),
           setCatName(name)
           setLevel(diff);
-          setView('QuestionsView1')
+          props.setView('QuestionsView1')
       }
   
       const changeView = (option: string) => {
-          setView(option)
+          props.setView(option)
       }
       const nextPlayer = (score: number) => {
         document.body.style.backgroundColor =  "#7e55aa94"
           setPlayer1({name: player1.name, score: player1.score + score})
-          setView("Player2")
+          props.setView("Player2")
       }
   
       const endRound = (score: number) => {
         document.body.style.backgroundColor =  "#7e55aa94"
         if (currRound === Number(totalRound)) {
             setPlayer2({name: player2.name, score: (player2.score + score)})
-            setView("Game-Over")
+            props.setView("Game-Over")
         } else {
             setPlayer2({name: player2.name, score: (player2.score + score)})
             setCurrRound(currRound + 1),
-            setView("Player1")
+            props.setView("Player1")
         }
       }
       
       const restartGame = () => {
-        setView("Player1")
+        props.setView("Player1")
         setPlayer1({name: player1.name, score: 0})
         setPlayer2({name: player2.name, score: 0})
         setQsPerRound(qsPerRound)
@@ -93,18 +95,18 @@ const Game: FC<IProps> = (props) => {
       }
       
       const restartNew = () => {
-          setView("New")
+          props.setView("New")
           setCurrRound(1)
       }
 
 
     return (
         <div>
-            {view === 'waiting' ? <div className='waiting'>
-                Waiting for opponent, you are {props.player}
+            {props.view === 'waiting' ? <div className='waiting'>
+                Waiting for opponent, you are {props.player1}
                 <button onClick={props.backClick}>Go Back to Lobby</button>
             </div> :
-            <div className='game'>Player has joined!</div>}
+            <div className='game'>{props.player2} has joined!</div>}
 {/* {(() => {
   if (view !== 'New' &&  view !== 'game-start') {
     return (

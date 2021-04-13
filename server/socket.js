@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const port = 5000;
+const games = require('./games');
 var server = require('http').createServer(app);
+console.log('Socket.io running on port 5000');
+
 
 const io = require('socket.io')(server, {
   cors: {
@@ -19,25 +22,36 @@ io.on('connection', (socket) => {
     console.log('disconnected');
   });
 
-  socket.on('create room', (data) => {
-    console.log('a user connected', data);
-    socket.join(data.room);
-  });
-
   socket.on('join room', (data) => {
     console.log('a user connected', data);
     socket.join(data.room);
-    socket.broacast.to(data.room).emit('start game');
+  });
+
+  socket.on('create game', (data) => {
+    games.post(data.room, {
+      player1: data.player1,
+      player2: null,
+      prefs: data.prefs});
   });
 
   socket.on('lobbyUpdate', () => {
-    console.log('the database changed');
-    socket.broadcast.to('lobby').emit('dbUpdate');
+    console.log('the lobby changed');
+    socket.broadcast.emit('lobby updated');
   });
 
   socket.on('leave room', (data) => {
     console.log('a user disconnected');
     socket.leave(data.room);
+  });
+
+  socket.on('full house', (data) => {
+    console.log(`Room ${data.room} is full`);
+    games.get(data.room, (result) => {
+      socket.to(data.room).emit('action', {
+        method: 'start game',
+        data: result.data
+      })
+    })
   });
 
   // socket.on('new message', (data) => {

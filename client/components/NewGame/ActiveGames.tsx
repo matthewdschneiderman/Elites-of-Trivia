@@ -4,7 +4,7 @@ import { Game } from './index';
 
 interface IProps {
   list: Game[]
-  handleClick: (_id: string, player: string, action: boolean) => void
+  handleClick: (_id: string, player: string, action: boolean, prefs: any) => void
 }
 
 const ActiveGames: React.FC<IProps> = (props) => {
@@ -19,7 +19,7 @@ const ActiveGames: React.FC<IProps> = (props) => {
       </div>
       </div>
       {props.list.map((game: Game) => {
-        return <div className='activeGame' key={game.user} onClick={() => props.handleClick(game._id,'anonymous', false)}>
+        return <div className='activeGame' key={game.user} onClick={() => props.handleClick(game._id,'anonymous', false, null)}>
           {game.user}
           <div style={{float: 'right'}}>
             {Object.values(game.prefs).map((pref: string | Number) => {

@@ -4,8 +4,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/trivia', {
   useUnifiedTopology: true,
 });
 
-const activegames = mongoose.model(
-  'activegames',
+const opengames = mongoose.model(
+  'opengames',
   new mongoose.Schema({
     user: String,
     prefs: {
@@ -19,7 +19,7 @@ const activegames = mongoose.model(
 module.exports.get = (req, res) => {
   // console.log(req.query.prefs);
   var prefs = JSON.parse(req.query.prefs);
-  activegames
+  opengames
     .find({
       'prefs.Rounds':
         prefs.Rounds === null
@@ -52,10 +52,10 @@ module.exports.get = (req, res) => {
 module.exports.post = (req, res) => {
   console.log(req.query);
   var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs) };
-  activegames.findOne({ user: game.user }).then((data) => {
+  opengames.findOne({ user: game.user }).then((data) => {
     // console.log(data);
     if (data === null) {
-      activegames
+      opengames
         .insertMany(game)
         .then((data) => {
           // console.log('id: ', data[0]._id);
@@ -70,7 +70,7 @@ module.exports.post = (req, res) => {
 
 module.exports.delete = (req, res) => {
   console.log('here', req.query);
-  activegames
+  opengames
     .deleteOne({ _id: req.query.prefs })
     .then(() => {
       // console.log('deleted!', req.query.prefs);
