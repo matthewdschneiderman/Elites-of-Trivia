@@ -12,6 +12,8 @@ app.get('/games', lobby.get);
 
 app.post('/games', lobby.post);
 
+app.delete('/games', lobby.delete);
+
 app.get('/opentdb', trivia);
 
 app.get('*', (req, res) => {

@@ -4,23 +4,36 @@ import GameStart from './GameStart/index'
 import Player, { ICategory, IPlayer } from './Player/index'
 import QuestionsView from './QuestionsView/index'
 import GameOver from './GameOver/index'
+import { isJsxOpeningFragment } from 'typescript';
 const io = require('socket.io-client');
 
 // import './main.scss';
 
 interface IProps {
-    roomId: string
+    roomId: string;
+    backClick: () => void;
+    joinGame: () => void;
 }
 
 
 const Game: FC<IProps> = (props) => {
 
+<<<<<<< HEAD
     const socket = io('localhost:4100', {
       // "secure": true,
       "force new connection" : true,
       "reconnectionAttempts": "10", //avoid having user reconnect manually in order to prevent dead clients after a server restart
       "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
       "transports": ["websocket"],
+=======
+    const socket = io('localhost:5000', {
+      "secure": true,
+      "force new connection" : true,
+      "reconnectionAttempts": "10", //avoid having user reconnect manually in order to prevent dead clients after a server restart
+      "timeout" : 10000,                  //before connect_error and connect_timeout are emitted.
+      "transports" : ["websocket"],
+      // 'transports': ['polling']
+>>>>>>> 2cb65b0cc3013f0adf7e0a10879adda55be40a09
   });
 
     // const [inRoom, setInRoom] = useState(false);
@@ -36,17 +49,8 @@ const Game: FC<IProps> = (props) => {
     const [catName, setCatName] = useState<string>()
 
     useEffect(() => {
-        // if (!inRoom) {
-          socket.emit('join room', {room: props.roomId});
-          // setInRoom(true)
-        // }
+      props.joinGame()
     }, []);
-
-    const leaveRoom = () => {
-        socket.emit('leave room', {
-          room: props.roomId
-        })
-      }
 
     // useEffect(() => {
     //     axios({
@@ -115,6 +119,7 @@ const Game: FC<IProps> = (props) => {
         <div>
             {view === 'waiting' ? <div className='waiting'>
                 Waiting for opponent
+                <button onClick={props.backClick}>Go Back to Lobby</button>
             </div> :
             <div className='game'>Player has joined!</div>}
 {/* {(() => {

@@ -21,12 +21,24 @@ module.exports.get = (req, res) => {
   var prefs = JSON.parse(req.query.prefs);
   activegames
     .find({
-      'prefs.Rounds': prefs.Rounds === null ? {
-        $in: [3, 5, 7, 10] } : prefs.Rounds,
-      'prefs.Questions': prefs.Questions === null ? {
-        $in: [2, 3, 4, 5] } : prefs.Questions,
-      'prefs.Time': prefs.Time === null ? {
-        $in: [15, 30, 45, 60] } : prefs.Time
+      'prefs.Rounds':
+        prefs.Rounds === null
+          ? {
+              $in: [3, 5, 7, 10],
+            }
+          : prefs.Rounds,
+      'prefs.Questions':
+        prefs.Questions === null
+          ? {
+              $in: [2, 3, 4, 5],
+            }
+          : prefs.Questions,
+      'prefs.Time':
+        prefs.Time === null
+          ? {
+              $in: [15, 30, 45, 60],
+            }
+          : prefs.Time,
     })
     .then((data) => {
       //console.log(data);
@@ -38,20 +50,33 @@ module.exports.get = (req, res) => {
 };
 
 module.exports.post = (req, res) => {
-    console.log(req.query);
-    var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs)};
-    activegames.findOne({user: game.user}).then((data) => {
-      // console.log(data);
-      if (data === null) {
-        activegames
-          .insertMany(game)
-          .then((data) => {
-            // console.log('id: ', data[0]._id);
-            res.status(200).send(data[0]._id);
-          })
-          .catch(() => res.status(403).send());
-      } else {
-        res.status(403).send();
-      }
-      })
-}
+  console.log(req.query);
+  var game = { user: req.query.user, prefs: JSON.parse(req.query.prefs) };
+  activegames.findOne({ user: game.user }).then((data) => {
+    // console.log(data);
+    if (data === null) {
+      activegames
+        .insertMany(game)
+        .then((data) => {
+          // console.log('id: ', data[0]._id);
+          res.status(200).send(data[0]._id);
+        })
+        .catch(() => res.status(403).send());
+    } else {
+      res.status(403).send();
+    }
+  });
+};
+
+module.exports.delete = (req, res) => {
+  console.log('here', req.query);
+  activegames
+    .deleteOne({ _id: req.query.prefs })
+    .then(() => {
+      // console.log('deleted!', req.query.prefs);
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};
