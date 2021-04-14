@@ -82,7 +82,7 @@ module.exports.post = (req, res) => {
 module.exports.delete = (req, res) => {
   console.log('here', req.query);
   activegames
-    .deleteOne({ _id: req.query.room })
+    .findByIdAndDelete({ _id: mongoose.Types.ObjectId.createFromHexString(req.query.room) })
     .then(() => {
       // console.log('deleted!', req.query.prefs);
       res.sendStatus(200);

@@ -40,11 +40,15 @@ const App: FC = () => {
     const [player2, setPlayer2] = useState<string>('Anonymous');
     const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
     const [view, setView] = useState<string>('waiting');
+    const [connected, setConnected] = useState<boolean>(false);
     
     useEffect(() => {
+    if (!connected) {
       socket.emit('join room', {room: roomId});
+      setConnected(true);
+    }
     }, [change]);
-
+    
 
     socket.on('lobby updated', () => {
       if (roomId === 'lobby') {
@@ -65,6 +69,13 @@ const App: FC = () => {
         }
     });
 
+    const changeRoom = (oldRoom: string, newRoom: string) => {
+      socket.emit('leave room', {room: oldRoom});
+      setConnected(false);
+      setRoomId(newRoom);
+      setChange(!change);
+    }
+
     const changeView = (view: string) => {
       setView(view);
       setChange(!change);
@@ -78,13 +89,12 @@ const App: FC = () => {
         url: '/games',
         method: 'delete',
         params: {
-          prefs: roomId
+          room: roomId
         }
       })
       .then(() => {
         socket.emit('lobbyUpdate');
-        setRoomId('lobby');
-        setChange(!change);
+        changeRoom(roomId, 'lobby');
       })
     }
 
@@ -92,9 +102,7 @@ const App: FC = () => {
       if (creating) {
         setPlayer1(player);
         socket.emit('lobbyUpdate');
-        //socket.emit('create game', {player1: player1, prefs: prefs})
-        setRoomId(_id);
-        setChange(!change);
+        changeRoom('lobby', _id)
       } else {
         setPlayer2(player);
         axios({
@@ -107,11 +115,9 @@ const App: FC = () => {
           }
         })
         .then((result) => {
-          socket.emit('join room', {room: _id});
           setPlayer1(result.data.user);
           socket.emit('lobbyUpdate');
-          setRoomId(_id);
-          setChange(!change);
+          changeRoom('lobby', _id);
           socket.emit('full house', result.data);
         })
       }

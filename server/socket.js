@@ -18,19 +18,12 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
   // console.log('connected');
   socket.on('disconnect', (reason) => {
-    //console.log('disconnected');
+    console.log('disconnected');
   });
 
   socket.on('join room', (data) => {
     console.log('a user connected', data);
     socket.join(data.room);
-  });
-
-  socket.on('create game', (data) => {
-    // games.create({room: data.room,
-    //   player1: data.player1,
-    //   player2: null,
-    //   prefs: data.prefs});
   });
 
   socket.on('lobbyUpdate', () => {
