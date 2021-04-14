@@ -41,6 +41,7 @@ const App: FC = () => {
     const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
     const [view, setView] = useState<string>('waiting');
     const [connected, setConnected] = useState<boolean>(false);
+    const [whomst, setWhomst] = useState<boolean>(true);
     
     useEffect(() => {
     if (!connected) {
@@ -58,11 +59,11 @@ const App: FC = () => {
 
     socket.on('action', (options: any) => {
       console.log('game message:', options);
-        if (options.method === 'guest joined') {
-          setPlayer1(options.data.user);
-          setPlayer2(options.data.guest);
-          setPrefs(options.data.prefs);
-          changeView('game');
+        switch (options.method) {
+          case 'guest joined':
+            setPlayer2(options.data.guest);
+            changeView('game');
+            break;
         }
     });
 
@@ -98,6 +99,7 @@ const App: FC = () => {
     const lobbyAction = (_id: string, player: string, creating: boolean, prefs: Prefs) => {
       if (creating) {
         setPlayer1(player);
+        setPrefs(prefs);
         socket.emit('lobbyUpdate');
         changeRoom('lobby', _id)
       } else {
@@ -117,12 +119,12 @@ const App: FC = () => {
           setPlayer1(result.data.user);
           setPlayer2(result.data.guest);
           setPrefs(result.data.prefs);
+          setWhomst(false);
           changeView('game');
-          socket.emit('full house', result.data);
-        })
-      }
-    }
-    
+          socket.emit('action', {_id: _id, method: 'guest joined', guest: result.data.guest});
+      })};
+    } 
+      
     return (
       <div>
         <div className="header">
@@ -130,7 +132,7 @@ const App: FC = () => {
         </div>
           <div>{
           roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
-          <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId} backClick={backClick} view={view} setView={changeView}/>
+          <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId} backClick={backClick} view={view} setView={changeView} socket={socket} whomst={whomst}/>
         }
           </div>
     </div>

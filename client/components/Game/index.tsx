@@ -6,7 +6,7 @@ import QuestionsView from './QuestionsView/index'
 import GameOver from './GameOver/index'
 import { isJsxOpeningFragment } from 'typescript';
 import { Prefs } from './../../app';
-const io = require('socket.io-client');
+import { Socket } from 'dgram';
 
 // import './main.scss';
 
@@ -18,13 +18,19 @@ interface IProps {
     view: string;
     setView: (view: string) => void;
     prefs: Prefs;
+    socket: any;
+    whomst: boolean
 }
 
 
-const Game: FC<IProps> = (props) => {
+const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, setView, socket, whomst}) => {
 
+  useEffect(() => {
 
-    // const [inRoom, setInRoom] = useState(false);
+  }, [view]);
+  
+  /*
+    const [inRoom, setInRoom] = useState(false);
     const [player1, setPlayer1] = useState<IPlayer>({name: 'player1', score: 0})
     const [player2, setPlayer2] = useState<IPlayer>({name: 'player2', score: 0})
     const [qsPerRound, setQsPerRound] = useState<number>(2)
@@ -35,21 +41,18 @@ const Game: FC<IProps> = (props) => {
     const [level, setLevel] = useState<string>("easy")
     const [catName, setCatName] = useState<string>()
 
-    useEffect(() => {
-      
-    }, [props.view]);
 
-    // useEffect(() => {
-    //     axios({
-    //       url: '/opentdb',
-    //       method: 'get',
-    //       params: {
-    //         method: 'categories'
-    //       }
-    //     }).then((result: any) => {
-    //       setCategories(result.data);
-    //     });
-    //   }, [])
+    useEffect(() => {
+        axios({
+          url: '/opentdb',
+          method: 'get',
+          params: {
+            method: 'categories'
+          }
+        }).then((result: any) => {
+          setCategories(result.data);
+        });
+      }, [])
 
     const settings = (player1: string, player2: string, round: number, questions: number, level: string) => {
         setPlayer1({name: player1, score: 0});
@@ -63,32 +66,32 @@ const Game: FC<IProps> = (props) => {
           setSelCateg(category),
           setCatName(name)
           setLevel(diff);
-          props.setView('QuestionsView1')
+          setView('QuestionsView1')
       }
   
       const changeView = (option: string) => {
-          props.setView(option)
+          setView(option)
       }
       const nextPlayer = (score: number) => {
         document.body.style.backgroundColor =  "#7e55aa94"
           setPlayer1({name: player1.name, score: player1.score + score})
-          props.setView("Player2")
+          setView("Player2")
       }
   
       const endRound = (score: number) => {
         document.body.style.backgroundColor =  "#7e55aa94"
         if (currRound === Number(totalRound)) {
             setPlayer2({name: player2.name, score: (player2.score + score)})
-            props.setView("Game-Over")
+            setView("Game-Over")
         } else {
             setPlayer2({name: player2.name, score: (player2.score + score)})
             setCurrRound(currRound + 1),
-            props.setView("Player1")
+            setView("Player1")
         }
       }
       
       const restartGame = () => {
-        props.setView("Player1")
+        setView("Player1")
         setPlayer1({name: player1.name, score: 0})
         setPlayer2({name: player2.name, score: 0})
         setQsPerRound(qsPerRound)
@@ -97,22 +100,27 @@ const Game: FC<IProps> = (props) => {
       }
       
       const restartNew = () => {
-          props.setView("New")
+          setView("New")
           setCurrRound(1)
       }
-
+      */
 
     return (
         <div>
-            {props.view === 'waiting' ? <div className='waiting'>
-                Waiting for opponent, you are {props.player1}
-                <button onClick={props.backClick}>Go Back to Lobby</button>
+            {view === 'waiting' ? <div className='waiting'>
+                Waiting for opponent, you are {player1}
+                <button onClick={backClick}>Go Back to Lobby</button>
             </div> :
             <div>
-            <div className='pregame'>{props.player1} vs. {props.player2}</div>
-            <div className='pregame'>{props.prefs.Rounds} rounds</div>
-            <div className='pregame'>{props.prefs.Questions} questions per round</div>
-            <div className='pregame'>{props.prefs.Time} seconds per question</div>
+              <div>
+                <div className='pregame'>{player1} vs. {player2}</div>
+                <div className='pregame'>{prefs.Rounds} rounds</div>
+                <div className='pregame'>{prefs.Questions} questions per round</div>
+                <div className='pregame'>{prefs.Time} seconds per question</div>
+              </div>
+              <div>
+                {/* {whomst ? }  */}
+              </div>
             </div>}
 {/* {(() => {
   if (view !== 'New' &&  view !== 'game-start') {

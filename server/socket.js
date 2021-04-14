@@ -4,7 +4,6 @@ const port = 5000;
 var server = require('http').createServer(app);
 console.log('Socket.io running on port 5000');
 
-
 const io = require('socket.io')(server, {
   cors: {
     // origin: 'http://18.224.228.145:80',
@@ -35,15 +34,21 @@ io.on('connection', (socket) => {
     socket.leave(data.room);
   });
 
-  socket.on('full house', (data) => {
-    console.log(`Room ${data._id} is full`);
-    socket.to(data._id).emit('action', {
-      method: 'guest joined',
-      data: data
-    });
+  socket.on('test', (data) => {
+    console.log(data);
   });
 
-
+  socket.on('action', (data) => {
+    switch (data.method) {
+      case 'guest joined':
+        console.log(`Room ${data._id} is full`);
+        socket.to(data._id).emit('action', {
+          method: 'guest joined',
+          data: data,
+        });
+        break;
+    }
+  });
 });
 
 server.listen(port);
