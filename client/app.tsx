@@ -64,7 +64,7 @@ const App: FC = () => {
           setPrefs(options.data.prefs);
           changeView('game');
           if (options.method === 'guest joined') {
-            socket.emit('start game', options.data);
+            setTimeout(() => socket.emit('start game', options.data), 1000);
           }
         }
     });
