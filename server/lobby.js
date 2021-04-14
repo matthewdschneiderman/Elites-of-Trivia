@@ -53,10 +53,12 @@ module.exports.get = (req, res) => {
 };
 
 module.exports.post = (req, res) => {
-  if (req.query.join === 'true') {
-    activegames.findByIdAndUpdate({ _id: req.query.room }, {full: true, guest: req.query.user})
-  .then(() => {
-    res.sendStatus(200);
+  if (JSON.parse(req.query.join)) {
+    activegames.findByIdAndUpdate({ 
+      _id: mongoose.Types.ObjectId.createFromHexString(req.query.room)
+    }, {full: true, guest: req.query.user}, {new: true})
+  .then((data) => {
+    res.status(200).send(data);
   });
   } else {
   var game = { user: req.query.user, guest: null, full: false, prefs: JSON.parse(req.query.prefs) };

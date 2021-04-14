@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-// import './main.scss';
 
 interface IWinner {
   name: string;

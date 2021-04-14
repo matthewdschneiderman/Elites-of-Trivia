@@ -1,5 +1,4 @@
 import React, {useState, useEffect, FC} from "react";
-// import './main.scss';
 
   interface IProps {
     settings: (name1: string, name2: string, length: number, numQs: number, level: string) => void,

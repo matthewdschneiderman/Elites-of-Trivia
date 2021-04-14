@@ -4,7 +4,7 @@ import { Game } from './index';
 
 interface IProps {
   list: Game[]
-  handleClick: (_id: string, player: string, action: boolean, prefs: any) => void
+  handleClick: (_id: string, player: string, creating: boolean, prefs: any) => void
 }
 
 const ActiveGames: React.FC<IProps> = (props) => {

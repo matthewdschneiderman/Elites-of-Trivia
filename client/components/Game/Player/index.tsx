@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import './main.scss'
 
 interface IProps {
   currRound: number,

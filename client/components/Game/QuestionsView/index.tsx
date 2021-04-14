@@ -1,7 +1,6 @@
 import React from "react";
 import axios from 'axios';
 import "regenerator-runtime/runtime.js";
-// import './main.scss';
 
 
 interface IPlayer {

@@ -38,6 +38,7 @@ const App: FC = () => {
     const [change, setChange] = useState<boolean>(false);
     const [player1, setPlayer1] = useState<string>('Anonymous');
     const [player2, setPlayer2] = useState<string>('Anonymous');
+    const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
     const [view, setView] = useState<string>('waiting');
     
     useEffect(() => {
@@ -46,15 +47,22 @@ const App: FC = () => {
 
 
     socket.on('lobby updated', () => {
-      console.log('the database changed');
       if (roomId === 'lobby') {
         setChange(!change);
       }
     });
 
     socket.on('action', (options: any) => {
-      console.log(options);
-      changeView('game');
+      console.log('game message:', options);
+        if (options.method === 'guest joined' || 'start game') {
+          setPlayer1(options.data.user);
+          setPlayer2(options.data.guest);
+          setPrefs(options.data.prefs);
+          changeView('game');
+          if (options.method === 'guest joined') {
+            socket.emit('start game', options.data);
+          }
+        }
     });
 
     const changeView = (view: string) => {
@@ -79,6 +87,35 @@ const App: FC = () => {
         setChange(!change);
       })
     }
+
+    const lobbyAction = (_id: string, player: string, creating: boolean, prefs: Prefs) => {
+      if (creating) {
+        setPlayer1(player);
+        socket.emit('lobbyUpdate');
+        //socket.emit('create game', {player1: player1, prefs: prefs})
+        setRoomId(_id);
+        setChange(!change);
+      } else {
+        setPlayer2(player);
+        axios({
+          url: '/games',
+          method: 'post',
+          params: {
+            join: true,
+            room: _id,
+            user: player2
+          }
+        })
+        .then((result) => {
+          socket.emit('join room', {room: _id});
+          setPlayer1(result.data.user);
+          socket.emit('lobbyUpdate');
+          setRoomId(_id);
+          setChange(!change);
+          socket.emit('full house', result.data);
+        })
+      }
+    }
     
     return (
       <div>
@@ -86,32 +123,8 @@ const App: FC = () => {
           <div className="title">Elites of Trivia</div>
         </div>
           <div>{
-          roomId === 'lobby' ? <NewGame handleClick={(_id: string, player: string, action: boolean, prefs: Prefs) => {
-            setPlayer1(player);
-            if (action) {
-              socket.emit('lobbyUpdate');
-              //socket.emit('create game', {player1: player1, prefs: prefs})
-              setRoomId(_id);
-              setChange(!change);
-            } else {
-              axios({
-                url: '/games',
-                method: 'join',
-                params: {
-                  join: true,
-                  room: _id,
-                  user: player2
-                }
-              })
-              .then(() => {
-                socket.emit('lobbyUpdate');
-                setRoomId(_id);
-                setChange(!change);
-                //socket.emit('full house', {room: _id, player2: player2});
-              })
-            }
-          }} change={change}/> :
-          <Game player1={player1} player2={player2} roomId={roomId} backClick={backClick} view={view} setView={changeView}/>
+          roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
+          <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId} backClick={backClick} view={view} setView={changeView}/>
         }
           </div>
     </div>

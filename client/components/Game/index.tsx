@@ -5,6 +5,7 @@ import Player, { ICategory, IPlayer } from './Player/index'
 import QuestionsView from './QuestionsView/index'
 import GameOver from './GameOver/index'
 import { isJsxOpeningFragment } from 'typescript';
+import { Prefs } from './../../app';
 const io = require('socket.io-client');
 
 // import './main.scss';
@@ -16,6 +17,7 @@ interface IProps {
     player2: string;
     view: string;
     setView: (view: string) => void;
+    prefs: Prefs;
 }
 
 
@@ -106,7 +108,12 @@ const Game: FC<IProps> = (props) => {
                 Waiting for opponent, you are {props.player1}
                 <button onClick={props.backClick}>Go Back to Lobby</button>
             </div> :
-            <div className='game'>{props.player2} has joined!</div>}
+            <div>
+            <div className='pregame'>{props.player1} vs. {props.player2}</div>
+            <div className='pregame'>{props.prefs.Rounds} rounds</div>
+            <div className='pregame'>{props.prefs.Questions} questions per round</div>
+            <div className='pregame'>{props.prefs.Time} seconds per question</div>
+            </div>}
 {/* {(() => {
   if (view !== 'New' &&  view !== 'game-start') {
     return (

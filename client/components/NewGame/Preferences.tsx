@@ -1,5 +1,5 @@
 import React from "react";
-import { Prefs } from './index';
+import { Prefs } from './../../app';
 // import './main.scss'
 
 interface IProps {

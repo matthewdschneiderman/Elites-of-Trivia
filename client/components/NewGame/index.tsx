@@ -2,21 +2,16 @@ import React, { useState, useEffect } from "react";
 import ActiveGames from './ActiveGames';
 import Preferences from './Preferences';
 import axios from 'axios';
+import { Prefs } from './../../app';
 // import { userInfo } from "node:os";
 import { ProgressPlugin } from "webpack";
 import { isPropertySignature } from "typescript";
 
 interface IProps {
-  handleClick: (_id: string, player: string, action: boolean, prefs: Prefs) => void;
+  handleClick: (_id: string, player: string, creating: boolean, prefs: Prefs) => void;
   change: boolean;
 }
 
-export interface Prefs {
-  [index: string]: number | string,
-  Rounds: number,
-  Questions: number,
-  Time: number
-}
 
 export interface Game {
   _id: string,

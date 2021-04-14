@@ -18,7 +18,7 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
   // console.log('connected');
   socket.on('disconnect', (reason) => {
-    console.log('disconnected');
+    //console.log('disconnected');
   });
 
   socket.on('join room', (data) => {
@@ -34,7 +34,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('lobbyUpdate', () => {
-    console.log('the lobby changed');
     socket.broadcast.emit('lobby updated');
   });
 
@@ -44,21 +43,21 @@ io.on('connection', (socket) => {
   });
 
   socket.on('full house', (data) => {
-    console.log(`Room ${data.room} is full`);
-    // games.join({room: data.room, player2: data.player2}, (result) => {
-    //   console.log(result);
-    //   socket.to(data.room).emit('action', {
-    //     method: 'start game',
-    //     data: result
-    //   })
-    // })
+    console.log(`Room ${data._id} is full`);
+    socket.to(data._id).emit('action', {
+      method: 'guest joined',
+      data: data
+    });
   });
 
-  // socket.on('new message', (data) => {
-  //   socket.broadcast
-  //     .to(data.room)
-  //     .emit('receive message', [data.messageObj, data.room]);
-  // });
+  socket.on('start game', (data) => {
+    console.log(`Game starting in room ${data._id}`);
+    socket.to(data._id).emit('action', {
+      method: 'start game',
+      data: data
+    });
+  });
+
 });
 
 server.listen(port);
