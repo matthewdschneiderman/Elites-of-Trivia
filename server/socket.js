@@ -43,13 +43,6 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('start game', (data) => {
-    console.log(`Game starting in room ${data._id}`);
-    socket.to(data._id).emit('action', {
-      method: 'start game',
-      data: data
-    });
-  });
 
 });
 

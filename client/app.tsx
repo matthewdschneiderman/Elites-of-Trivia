@@ -58,14 +58,11 @@ const App: FC = () => {
 
     socket.on('action', (options: any) => {
       console.log('game message:', options);
-        if (options.method === 'guest joined' || 'start game') {
+        if (options.method === 'guest joined') {
           setPlayer1(options.data.user);
           setPlayer2(options.data.guest);
           setPrefs(options.data.prefs);
           changeView('game');
-          if (options.method === 'guest joined') {
-            setTimeout(() => socket.emit('start game', options.data), 1000);
-          }
         }
     });
 
@@ -115,9 +112,12 @@ const App: FC = () => {
           }
         })
         .then((result) => {
-          setPlayer1(result.data.user);
           socket.emit('lobbyUpdate');
           changeRoom('lobby', _id);
+          setPlayer1(result.data.user);
+          setPlayer2(result.data.guest);
+          setPrefs(result.data.prefs);
+          changeView('game');
           socket.emit('full house', result.data);
         })
       }
