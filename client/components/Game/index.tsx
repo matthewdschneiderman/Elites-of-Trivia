@@ -1,14 +1,13 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
-import GameStart from './GameStart/index'
-import Player, { ICategory, IPlayer } from './Player/index'
-import QuestionsView from './QuestionsView/index'
-import GameOver from './GameOver/index'
+import GameStart from './GameStart/index';
+import Spectator from './Spectator/index';
+import Player, { ICategory, IPlayer } from './Player/index';
+import QuestionsView from './QuestionsView/index';
+import GameOver from './GameOver/index';
 import { isJsxOpeningFragment } from 'typescript';
 import { Prefs } from './../../app';
 import { Socket } from 'dgram';
-
-// import './main.scss';
 
 interface IProps {
     roomId: string;
@@ -22,11 +21,41 @@ interface IProps {
     whomst: boolean
 }
 
+interface GameData {
+  chat: string[];
+  turn: boolean;
+  score: number[];
+  category: ICategory;
+  question: string;
+  history: string[];
+}
+
+var categories: ICategory[];
+
+axios({
+  url: '/opentdb',
+  method: 'get',
+  params: {
+    method: 'categories'
+  }
+}).then((result: any) => {
+  categories = result.data;
+});
+
 
 const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, setView, socket, whomst}) => {
 
 
   const [change, setChange] = useState<boolean>(whomst);
+  const [gameData, setGameData] = useState<GameData>(
+    {
+      chat: [],
+      turn: true,
+      score: [0, 0],
+      category: null,
+      question: null,
+      history: []
+    });
 
   useEffect(() => {
 
@@ -43,6 +72,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
         }
       }).then((result: any) => {
         console.log('Player', whomst ? 2 : 1, 'sent an update:', result.data);
+        // setGameData(result.data);
         setChange(!change);
       });
     }
@@ -52,6 +82,38 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
     socket.emit('game updated', { _id: roomId, byWhom: whomst });
     setChange(!change);
   }
+
+
+  return (
+    <div>
+        {view === 'waiting' ? <div className='waiting'>
+            Waiting for opponent, you are {player1}
+            <button onClick={backClick}>Go Back to Lobby</button>
+        </div> :
+        <div>
+          <div>
+            <div className='pregame'>{player1} vs. {player2}</div>
+            <div className='pregame'>{prefs.Rounds} rounds</div>
+            <div className='pregame'>{prefs.Questions} questions per round</div>
+            <div className='pregame'>{prefs.Time} seconds per question</div>
+          </div>
+          <div>
+            <button onClick={sendUpdate}>Update the game!</button>
+            {gameData.turn === whomst ?
+                <Player categories={categories} currRound={0}
+                  playStat={whomst ? 
+                    { name: player1, score: gameData.score[0] }
+                    :
+                    { name: player2, score: gameData.score[1]}}
+                  selectedCategory={null} player={null}
+                  />
+                :
+                <Spectator/>
+          }
+          </div>
+        </div>}
+    </div>
+  );
   
   /*
     const [inRoom, setInRoom] = useState(false);
@@ -127,26 +189,8 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
           setView("New")
           setCurrRound(1)
       }
-      */
-
-    return (
-        <div>
-            {view === 'waiting' ? <div className='waiting'>
-                Waiting for opponent, you are {player1}
-                <button onClick={backClick}>Go Back to Lobby</button>
-            </div> :
-            <div>
-              <div>
-                <div className='pregame'>{player1} vs. {player2}</div>
-                <div className='pregame'>{prefs.Rounds} rounds</div>
-                <div className='pregame'>{prefs.Questions} questions per round</div>
-                <div className='pregame'>{prefs.Time} seconds per question</div>
-              </div>
-              <div>
-                <button onClick={sendUpdate}>Update the game!</button>
-              </div>
-            </div>}
-{/* {(() => {
+      
+{(() => {
   if (view !== 'New' &&  view !== 'game-start') {
     return (
       <div className="player-score">
@@ -170,9 +214,8 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
           view.includes('QuestionsView') ? <QuestionsView category={selCateg} catName={catName} currRound={currRound} playStat={view === 'Player1' ? player1 : player2} player={view === 'Player1' ? 1 : 2}
           qsPerRound={qsPerRound} level={level} next={(score: number) => view === 'QuestionsView1' ? nextPlayer(score) : endRound(score)}/> :
           <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>
-        } */}
-        </div>
-    );
+        }
+        */
 };
 
 export default Game;

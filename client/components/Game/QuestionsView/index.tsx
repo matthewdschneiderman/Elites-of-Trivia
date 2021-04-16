@@ -19,13 +19,13 @@ interface IProps {
   catName: string,
 }
 
-const QuestionsView: React.FC<IProps> = (props) => {
+export interface IQuestion {
+  correct: string,
+  answers: string[],
+  question: string
+}
 
-  interface Question {
-    correct: string,
-    answers: string[],
-    question: string
-  }
+const QuestionsView: React.FC<IProps> = (props) => {
 
 
   interface Options {
@@ -35,7 +35,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
     type: 'multiple',
   }
 
-  const [questions, setQuestions] = React.useState<Question[]>([]);
+  const [questions, setQuestions] = React.useState<IQuestion[]>([]);
   const [roundScore, setRoundScore] = React.useState<number>(0);
   const [count, setCount] = React.useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false)

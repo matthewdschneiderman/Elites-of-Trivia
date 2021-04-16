@@ -10,17 +10,21 @@ const cleanCat = (cat) => {
     return clean;
   };
 
-module.exports = (req, res) => {
-    if (req.query.method === 'categories') {
-      opentdb
+var categories;
+
+opentdb
         .getCategories()
         .then((result) => {
           for (var category of result) {
             category = cleanCat(category);
           }
-          res.status(200).send(result);
+          categories = result;
         })
         .catch((err) => console.log(err));
+
+module.exports = (req, res) => {
+    if (req.query.method === 'categories') {
+      res.status(200).send(categories);
     } else {
       opentdb
         .getTrivia(JSON.parse(req.query.options))

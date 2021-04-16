@@ -46,7 +46,7 @@ const Player: React.FC<IProps> = (props) => {
         <div className={`name${props.player}-turn`}>{props.playStat.name}'s Turn</div>
       </div>
       <div className="cards">{props.categories.map((category: ICategory) => (
-          <div>
+          <div key={category.id}>
             <div className={choosingDiff === category.id ? 'diffDiv' : 'card'} key={category.id} onClick={choosingDiff === category.id ? null : () => setChoosingDiff(category.id)}>
               {choosingDiff === category.id ?
               <div>
