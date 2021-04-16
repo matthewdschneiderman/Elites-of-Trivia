@@ -16,6 +16,27 @@ const activegames = mongoose.model(
       Questions: Number,
       Time: Number,
     },
+    gameData: {
+      chat: [
+        {
+          message: String,
+          sender: String,
+        }
+      ],
+      turn: Boolean,
+      score: [Number],
+      category: {
+        id: Number,
+        name: String
+      },
+      question: String,
+      history: [
+        {
+          question: String,
+          correct: Boolean
+        }
+      ]
+    }
   })
 );
 
@@ -67,7 +88,18 @@ const joinGame = (res, room, user) => {
     {
       _id: mongoose.Types.ObjectId.createFromHexString(room),
     },
-    { full: true, guest: user },
+    { 
+      full: true, 
+      guest: user,
+      gameData: {
+        chat: [],
+        turn: true,
+        score: [0,0],
+        category: null,
+        question: null,
+        history: []
+      }
+    },
     { new: true }
   )
   .then((data) => {
@@ -81,6 +113,7 @@ const createGame = (res, user, prefs) => {
     guest: null,
     full: false,
     prefs: prefs,
+    gameData: null
   };
   activegames.findOne({ user: game.user }).then((data) => {
     if (data === null) {
@@ -97,8 +130,17 @@ const createGame = (res, user, prefs) => {
 };
 
 const updateGame = (res, room, update) => {
-  console.log(room, update);
-  res.status(200).send();
+  activegames
+  .findByIdAndUpdate(
+    {
+      _id: mongoose.Types.ObjectId.createFromHexString(room),
+    },
+    update,
+    { new: true }
+  )
+  .then((data) => {
+    res.status(200).send(data);
+  });
 }
 
 module.exports.get = (req, res) => {

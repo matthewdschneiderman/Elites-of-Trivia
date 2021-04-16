@@ -1,5 +1,5 @@
 import React, { useEffect, useState, FC } from "react";
-import Game from './components/Game/index'
+import Game, { GameData } from './components/Game/index'
 import NewGame from './components/NewGame/index'
 import axios from 'axios';
 const io = require('socket.io-client');
@@ -42,6 +42,15 @@ const App: FC = () => {
     const [view, setView] = useState<string>('waiting');
     const [connected, setConnected] = useState<boolean>(false);
     const [whomst, setWhomst] = useState<boolean>(true);
+    const [gameData, setGameData] = useState<GameData>(
+      {
+        chat: [],
+        turn: true,
+        score: [0, 0],
+        category: null,
+        question: null,
+        history: []
+      });
     
     useEffect(() => {
     if (!connected) {
@@ -108,7 +117,7 @@ const App: FC = () => {
           params: {
             method: 'join',
             room: _id,
-            user: player2
+            user: player1
           }
         })
         .then((result) => {
@@ -129,7 +138,9 @@ const App: FC = () => {
         </div>
           <div>{
           roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
-          <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId} backClick={backClick} view={view} setView={changeView} socket={socket} whomst={whomst}/>
+          <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId}
+            backClick={backClick} view={view} setView={changeView} socket={socket}
+            whomst={whomst} gameData={gameData} setGameData={setGameData}/>
         }
           </div>
     </div>

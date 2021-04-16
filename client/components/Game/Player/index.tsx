@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
+import QuestionsView from './../QuestionsView/index';
+import { Prefs } from './../../../app';
 
 interface IProps {
   currRound: number,
   categories: ICategory[],
   playStat: IPlayer,
-  selectedCategory: (id: number, name: string, diff: string) => void,
-  player: number
+  sendUpdate: (update: any) => void,
+  player: number,
+  prefs: Prefs
 }
 
 export interface IPlayer {
@@ -36,13 +39,26 @@ const diffCard: React.FC<diffProps> = (props) => {
 const Player: React.FC<IProps> = (props) => {
 
   const [choosingDiff, setChoosingDiff] = useState<number>(null);
+  const [category, setCategory] = useState<ICategory>(null);
+  const [level, setLevel] = useState<string>(null);
+  const [view, setView] = useState<boolean>(true);
+  
+  const selectedCategory = (id: number, name: string, diff: string) => {
+    props.sendUpdate({'gameData.category': name});
+    setCategory({id: id, name: name});
+    setLevel(diff);
+    setView(false);
+  }
   
   return (
     <div>
-      <div className="player-turn">
-        <div className="round-track">
-          <span className="span-align">Round <div>{props.currRound}</div></span>
-        </div>
+      {
+      view ?
+      <div>
+        <div className="player-turn">
+          <div className="round-track">
+            <span className="span-align">Round <div>{props.currRound}</div></span>
+          </div>
         <div className={`name${props.player}-turn`}>{props.playStat.name}'s Turn</div>
       </div>
       <div className="cards">{props.categories.map((category: ICategory) => (
@@ -50,10 +66,9 @@ const Player: React.FC<IProps> = (props) => {
             <div className={choosingDiff === category.id ? 'diffDiv' : 'card'} key={category.id} onClick={choosingDiff === category.id ? null : () => setChoosingDiff(category.id)}>
               {choosingDiff === category.id ?
               <div>
-              {}
-              {diffCard({id: category.id, name: category.name, selectedCategory: props.selectedCategory, diff: 'easy'})}
-              {diffCard({id: category.id, name: category.name, selectedCategory: props.selectedCategory, diff: 'medium'})}
-              {diffCard({id: category.id, name: category.name, selectedCategory: props.selectedCategory, diff: 'hard'})}
+              {diffCard({id: category.id, name: category.name, selectedCategory: selectedCategory, diff: 'easy'})}
+              {diffCard({id: category.id, name: category.name, selectedCategory: selectedCategory, diff: 'medium'})}
+              {diffCard({id: category.id, name: category.name, selectedCategory: selectedCategory, diff: 'hard'})}
               </div>
             : 
             <span className="card-Qs">
@@ -64,6 +79,11 @@ const Player: React.FC<IProps> = (props) => {
           </div>
         ))} 
       </div>
+      </div>
+      :
+      <QuestionsView category={category} level={level} prefs={props.prefs} playStat={props.playStat} next={null} currRound={null} player={props.player}/>
+      }
+      
     </div>
   )
 }

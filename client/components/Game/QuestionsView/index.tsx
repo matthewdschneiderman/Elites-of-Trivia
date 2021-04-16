@@ -1,6 +1,8 @@
 import React from "react";
 import axios from 'axios';
 import "regenerator-runtime/runtime.js";
+import { ICategory } from './../Player/index';
+import { Prefs } from './../../../app';
 
 
 interface IPlayer {
@@ -9,14 +11,13 @@ interface IPlayer {
 }
 
 interface IProps {
-  qsPerRound: number,
-  category: number,
+  category: ICategory,
   level: string,
   playStat: IPlayer,
   currRound: number,
   next: (roundScore: number) => void,
   player: number,
-  catName: string,
+  prefs: Prefs
 }
 
 export interface IQuestion {
@@ -41,8 +42,8 @@ const QuestionsView: React.FC<IProps> = (props) => {
   const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false)
 
   const options: Options = {
-    amount: Number(props.qsPerRound),
-    category: props.category,
+    amount: Number(props.prefs.Questions),
+    category: props.category.id,
     difficulty: props.level,
     type: 'multiple',
   }
@@ -70,7 +71,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
       document.body.style.backgroundColor = "rgb(248 3 3 / 30%)"
     }
 
-    if (count === Number(props.qsPerRound) - 1) {
+    if (count === Number(props.prefs.Questions) - 1) {
       document.getElementById("end-btn").classList.remove("hide")
     } else {
       document.getElementById("next-btn").classList.remove("hide");
@@ -100,7 +101,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
           </div>
         </div>
         <div className="question-container">
-          <div className="category"><span>{props.catName}</span></div>
+          <div className="category"><span>{props.category.name}</span></div>
           <div className="question-style">{questions[count].question}</div>
           <div className="answer-choices">{questions[count].answers.map((answer) => {
             return <button className="all-answers" key={answer} value={answer} disabled={questionAnswered} onClick={showAnswer}

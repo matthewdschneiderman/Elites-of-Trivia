@@ -9,19 +9,8 @@ import { isJsxOpeningFragment } from 'typescript';
 import { Prefs } from './../../app';
 import { Socket } from 'dgram';
 
-interface IProps {
-    roomId: string;
-    backClick: () => void;
-    player1: string;
-    player2: string;
-    view: string;
-    setView: (view: string) => void;
-    prefs: Prefs;
-    socket: any;
-    whomst: boolean
-}
 
-interface GameData {
+export interface GameData {
   chat: string[];
   turn: boolean;
   score: number[];
@@ -29,6 +18,21 @@ interface GameData {
   question: string;
   history: string[];
 }
+
+interface IProps {
+  roomId: string;
+  backClick: () => void;
+  player1: string;
+  player2: string;
+  view: string;
+  setView: (view: string) => void;
+  prefs: Prefs;
+  socket: any;
+  whomst: boolean;
+  gameData: GameData;
+  setGameData: (gameData: GameData) => void;
+}
+
 
 var categories: ICategory[];
 
@@ -43,23 +47,15 @@ axios({
 });
 
 
-const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, setView, socket, whomst}) => {
+const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, setView, socket, whomst, gameData, setGameData}) => {
 
 
   const [change, setChange] = useState<boolean>(whomst);
-  const [gameData, setGameData] = useState<GameData>(
-    {
-      chat: [],
-      turn: true,
-      score: [0, 0],
-      category: null,
-      question: null,
-      history: []
-    });
 
   useEffect(() => {
 
   }, [change]);
+
 
   socket.on('game updated', (byWhom: any) => {
     if (byWhom !== whomst) {
@@ -72,16 +68,28 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
         }
       }).then((result: any) => {
         console.log('Player', whomst ? 2 : 1, 'sent an update:', result.data);
-        // setGameData(result.data);
+        setGameData(result.data.gameData);
         setChange(!change);
       });
     }
   });
 
-  const sendUpdate = () => {
-    socket.emit('game updated', { _id: roomId, byWhom: whomst });
-    setChange(!change);
-  }
+  const sendUpdate = (update: any) => {
+    axios({
+      url: '/games',
+      method: 'post',
+      params: {
+        method: 'update',
+        room: roomId,
+        update: update
+      }
+    })
+    .then((result: any) => {
+      setGameData(result.data.gameData);
+      socket.emit('game updated', { _id: roomId, byWhom: whomst });
+      setChange(!change);
+    })
+  };
 
 
   return (
@@ -98,14 +106,13 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
             <div className='pregame'>{prefs.Time} seconds per question</div>
           </div>
           <div>
-            <button onClick={sendUpdate}>Update the game!</button>
             {gameData.turn === whomst ?
                 <Player categories={categories} currRound={0}
                   playStat={whomst ? 
                     { name: player1, score: gameData.score[0] }
                     :
                     { name: player2, score: gameData.score[1]}}
-                  selectedCategory={null} player={null}
+                  sendUpdate={sendUpdate} player={whomst ? 1 : 2} prefs={prefs}
                   />
                 :
                 <Spectator/>
