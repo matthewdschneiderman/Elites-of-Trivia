@@ -7,7 +7,7 @@ interface IProps {
   categories: ICategory[],
   playStat: IPlayer,
   sendUpdate: (update: any) => void,
-  player: number,
+  whomst: boolean,
   prefs: Prefs
 }
 
@@ -49,6 +49,14 @@ const Player: React.FC<IProps> = (props) => {
     setLevel(diff);
     setView(false);
   }
+
+  const next = () => {
+    props.sendUpdate({
+      'gameData.turn': !props.whomst,
+      'gameData.round': props.whomst ? 
+        props.currRound : props.currRound + 1
+      });
+  }
   
   return (
     <div>
@@ -59,7 +67,7 @@ const Player: React.FC<IProps> = (props) => {
           <div className="round-track">
             <span className="span-align">Round <div>{props.currRound}</div></span>
           </div>
-        <div className={`name${props.player}-turn`}>{props.playStat.name}'s Turn</div>
+        <div className={`name${props.whomst ? 1 : 2}-turn`}>{props.playStat.name}'s Turn</div>
       </div>
       <div className="cards">{props.categories.map((category: ICategory) => (
           <div key={category.id}>
@@ -81,7 +89,8 @@ const Player: React.FC<IProps> = (props) => {
       </div>
       </div>
       :
-      <QuestionsView category={category} level={level} prefs={props.prefs} playStat={props.playStat} next={null} currRound={null} player={props.player}/>
+      <QuestionsView category={category} level={level} prefs={props.prefs}
+        playStat={props.playStat} next={next} currRound={props.currRound} whomst={props.whomst}/>
       }
       
     </div>

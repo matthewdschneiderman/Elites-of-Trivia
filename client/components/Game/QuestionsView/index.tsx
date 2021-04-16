@@ -16,7 +16,7 @@ interface IProps {
   playStat: IPlayer,
   currRound: number,
   next: (roundScore: number) => void,
-  player: number,
+  whomst: boolean,
   prefs: Prefs
 }
 
@@ -81,7 +81,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
 
   const nextQuestion = () => {
     setQuestionAnswered(false)
-    document.body.style.backgroundColor =  "#7e55aa94"
+    //document.body.style.backgroundColor =  "#7e55aa94"
     document.getElementById("next-btn").classList.add("hide")
     setCount(count + 1)
   }
@@ -95,9 +95,9 @@ const QuestionsView: React.FC<IProps> = (props) => {
           <div className="round-track">
             <span className="span-align">Round <div>{props.currRound}</div></span>
           </div>
-          <div className={`name${props.player}-turn`}>{props.playStat.name}'s Turn</div>
+          <div className={`name${props.whomst ? 1 : 2}-turn`}>{props.playStat.name}'s Turn</div>
           <div className="round-track">
-              <span className="span-align">Round Score <div className={`player${props.player}-color`}>{roundScore}</div></span>
+              <span className="span-align">Round Score <div className={`player${props.whomst ? 1 : 2}-color`}>{roundScore}</div></span>
           </div>
         </div>
         <div className="question-container">

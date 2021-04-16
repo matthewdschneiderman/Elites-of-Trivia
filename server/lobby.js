@@ -23,6 +23,7 @@ const activegames = mongoose.model(
           sender: String,
         }
       ],
+      round: Number,
       turn: Boolean,
       score: [Number],
       category: {
@@ -93,6 +94,7 @@ const joinGame = (res, room, user) => {
       guest: user,
       gameData: {
         chat: [],
+        round: 1,
         turn: true,
         score: [0,0],
         category: null,

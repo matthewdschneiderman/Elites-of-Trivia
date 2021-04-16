@@ -12,6 +12,7 @@ import { Socket } from 'dgram';
 
 export interface GameData {
   chat: string[];
+  round: number;
   turn: boolean;
   score: number[];
   category: ICategory;
@@ -107,12 +108,12 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
           </div>
           <div>
             {gameData.turn === whomst ?
-                <Player categories={categories} currRound={0}
+                <Player categories={categories} currRound={gameData.round}
                   playStat={whomst ? 
                     { name: player1, score: gameData.score[0] }
                     :
                     { name: player2, score: gameData.score[1]}}
-                  sendUpdate={sendUpdate} player={whomst ? 1 : 2} prefs={prefs}
+                  sendUpdate={sendUpdate} whomst={whomst} prefs={prefs}
                   />
                 :
                 <Spectator/>

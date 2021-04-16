@@ -45,6 +45,7 @@ const App: FC = () => {
     const [gameData, setGameData] = useState<GameData>(
       {
         chat: [],
+        round: 1,
         turn: true,
         score: [0, 0],
         category: null,
