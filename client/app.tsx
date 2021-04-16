@@ -57,14 +57,10 @@ const App: FC = () => {
       }
     });
 
-    socket.on('action', (options: any) => {
-      console.log('game message:', options);
-        switch (options.method) {
-          case 'guest joined':
-            setPlayer2(options.data.guest);
-            changeView('game');
-            break;
-        }
+    socket.on('guest joined', (guest: any) => {
+      console.log(guest, 'has joined the game!');
+      setPlayer2(guest);
+      changeView('game');
     });
 
     const changeRoom = (oldRoom: string, newRoom: string) => {
@@ -99,16 +95,18 @@ const App: FC = () => {
     const lobbyAction = (_id: string, player: string, creating: boolean, prefs: Prefs) => {
       if (creating) {
         setPlayer1(player);
+        setWhomst(true);
         setPrefs(prefs);
         socket.emit('lobbyUpdate');
         changeRoom('lobby', _id)
       } else {
         setPlayer2(player);
+        setWhomst(false);
         axios({
           url: '/games',
           method: 'post',
           params: {
-            join: true,
+            method: 'join',
             room: _id,
             user: player2
           }
@@ -119,9 +117,8 @@ const App: FC = () => {
           setPlayer1(result.data.user);
           setPlayer2(result.data.guest);
           setPrefs(result.data.prefs);
-          setWhomst(false);
           changeView('game');
-          socket.emit('action', {_id: _id, method: 'guest joined', guest: result.data.guest});
+          socket.emit('guest joined', {_id: _id, guest: result.data.guest});
       })};
     } 
       

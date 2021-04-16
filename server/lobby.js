@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const { updateJsxFragment } = require('typescript');
 mongoose.connect('mongodb://127.0.0.1:27017/trivia', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -18,74 +19,110 @@ const activegames = mongoose.model(
   })
 );
 
-module.exports.get = (req, res) => {
-  // console.log(req.query.prefs);
-  var prefs = JSON.parse(req.query.prefs);
+const getOpengames = (res, prefs) => {
   activegames
-    .find({
-      full: false,
-      'prefs.Rounds':
-        prefs.Rounds === null
-          ? {
-              $in: [3, 5, 7, 10],
-            }
-          : prefs.Rounds,
-      'prefs.Questions':
-        prefs.Questions === null
-          ? {
-              $in: [2, 3, 4, 5],
-            }
-          : prefs.Questions,
-      'prefs.Time':
-        prefs.Time === null
-          ? {
-              $in: [15, 30, 45, 60],
-            }
-          : prefs.Time,
-    })
-    .then((data) => {
-      //console.log(data);
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .find({
+    full: false,
+    'prefs.Rounds':
+      prefs.Rounds === null
+        ? {
+            $in: [3, 5, 7, 10],
+          }
+        : prefs.Rounds,
+    'prefs.Questions':
+      prefs.Questions === null
+        ? {
+            $in: [2, 3, 4, 5],
+          }
+        : prefs.Questions,
+    'prefs.Time':
+      prefs.Time === null
+        ? {
+            $in: [15, 30, 45, 60],
+          }
+        : prefs.Time,
+  })
+  .then((data) => {
+    //console.log(data);
+    res.status(200).send(data);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+};
+
+const getActivegame = (res, room) => {
+  activegames
+  .findById({
+    _id: mongoose.Types.ObjectId.createFromHexString(room),
+  })
+  .then((data) => {
+    res.status(200).send(data);
+  });
+}
+
+const joinGame = (res, room, user) => {
+  activegames
+  .findByIdAndUpdate(
+    {
+      _id: mongoose.Types.ObjectId.createFromHexString(room),
+    },
+    { full: true, guest: user },
+    { new: true }
+  )
+  .then((data) => {
+    res.status(200).send(data);
+  });
+};
+
+const createGame = (res, user, prefs) => {
+  var game = {
+    user: user,
+    guest: null,
+    full: false,
+    prefs: prefs,
+  };
+  activegames.findOne({ user: game.user }).then((data) => {
+    if (data === null) {
+      activegames
+        .insertMany(game)
+        .then((data) => {
+          res.status(200).send(data[0]._id);
+        })
+        .catch(() => res.status(403).send());
+    } else {
+      res.status(403).send();
+    }
+  });
+};
+
+const updateGame = (res, room, update) => {
+  console.log(room, update);
+  res.status(200).send();
+}
+
+module.exports.get = (req, res) => {
+  switch (req.query.method) {
+    case 'open':
+      getOpengames(res, JSON.parse(req.query.prefs));
+      break;
+    case 'active':
+      getActivegame(res, req.query.room);
+      break;
+  }
 };
 
 module.exports.post = (req, res) => {
-  if (JSON.parse(req.query.join)) {
-    activegames
-      .findByIdAndUpdate(
-        {
-          _id: mongoose.Types.ObjectId.createFromHexString(req.query.room),
-        },
-        { full: true, guest: req.query.user },
-        { new: true }
-      )
-      .then((data) => {
-        res.status(200).send(data);
-      });
-  } else {
-    var game = {
-      user: req.query.user,
-      guest: null,
-      full: false,
-      prefs: JSON.parse(req.query.prefs),
-    };
-    activegames.findOne({ user: game.user }).then((data) => {
-      // console.log(data);
-      if (data === null) {
-        activegames
-          .insertMany(game)
-          .then((data) => {
-            // console.log('id: ', data[0]._id);
-            res.status(200).send(data[0]._id);
-          })
-          .catch(() => res.status(403).send());
-      } else {
-        res.status(403).send();
-      }
-    });
+  switch (req.query.method) {
+    case 'join':
+      joinGame(res, req.query.room, req.query.user);
+      break;
+    case 'create':
+      createGame(res, req.query.user, JSON.parse(req.query.prefs));
+      break;
+    case 'update':
+      updateGame(res, req.query.room, JSON.parse(req.query.update));
+      break;
   }
 };
 

@@ -36,6 +36,7 @@ const NewGame: React.FC<IProps> = (props) => {
       url: '/games',
       method: 'get',
       params: {
+        method: 'open',
         prefs: prefs
       }
     }).then((result: any) => {
@@ -58,7 +59,7 @@ const NewGame: React.FC<IProps> = (props) => {
           url: '/games',
           method: 'post',
           params: {
-            join: false,
+            method: 'create',
             user: user,
             prefs: prefs
           }

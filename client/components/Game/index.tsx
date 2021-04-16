@@ -25,9 +25,33 @@ interface IProps {
 
 const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, setView, socket, whomst}) => {
 
+
+  const [change, setChange] = useState<boolean>(whomst);
+
   useEffect(() => {
 
-  }, [view]);
+  }, [change]);
+
+  socket.on('game updated', (byWhom: any) => {
+    if (byWhom !== whomst) {
+      axios({
+        url: '/games',
+        method: 'get',
+        params: {
+          method: 'active',
+          room: roomId
+        }
+      }).then((result: any) => {
+        console.log('Player', whomst ? 2 : 1, 'sent an update:', result.data);
+        setChange(!change);
+      });
+    }
+  });
+
+  const sendUpdate = () => {
+    socket.emit('game updated', { _id: roomId, byWhom: whomst });
+    setChange(!change);
+  }
   
   /*
     const [inRoom, setInRoom] = useState(false);
@@ -119,7 +143,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
                 <div className='pregame'>{prefs.Time} seconds per question</div>
               </div>
               <div>
-                {/* {whomst ? }  */}
+                <button onClick={sendUpdate}>Update the game!</button>
               </div>
             </div>}
 {/* {(() => {

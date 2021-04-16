@@ -38,16 +38,14 @@ io.on('connection', (socket) => {
     console.log(data);
   });
 
-  socket.on('action', (data) => {
-    switch (data.method) {
-      case 'guest joined':
-        console.log(`Room ${data._id} is full`);
-        socket.to(data._id).emit('action', {
-          method: 'guest joined',
-          data: data,
-        });
-        break;
-    }
+  socket.on('guest joined', (data) => {
+    console.log(`Room ${data._id} is full`);
+    socket.to(data._id).emit('guest joined', data.guest);
+  })
+
+  socket.on('game updated', (data) => {
+      console.log(`Room ${data._id} had an update`);
+      socket.to(data._id).emit('game updated', data.byWhom);
   });
 });
 
