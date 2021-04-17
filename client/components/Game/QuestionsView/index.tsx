@@ -13,11 +13,11 @@ interface IPlayer {
 interface IProps {
   category: ICategory,
   level: string,
-  playStat: IPlayer,
   currRound: number,
   next: (roundScore: number) => void,
   whomst: boolean,
-  prefs: Prefs
+  prefs: Prefs,
+  player: string
 }
 
 export interface IQuestion {
@@ -39,7 +39,8 @@ const QuestionsView: React.FC<IProps> = (props) => {
   const [questions, setQuestions] = React.useState<IQuestion[]>([]);
   const [roundScore, setRoundScore] = React.useState<number>(0);
   const [count, setCount] = React.useState<number>(0);
-  const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false)
+  const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false);
+  //const [history, setHistory] = React.useState<string[]>([]);
 
   const options: Options = {
     amount: Number(props.prefs.Questions),
@@ -81,7 +82,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
 
   const nextQuestion = () => {
     setQuestionAnswered(false)
-    //document.body.style.backgroundColor =  "#7e55aa94"
+    document.body.style.backgroundColor =  "#7e55aa94"
     document.getElementById("next-btn").classList.add("hide")
     setCount(count + 1)
   }
@@ -95,7 +96,7 @@ const QuestionsView: React.FC<IProps> = (props) => {
           <div className="round-track">
             <span className="span-align">Round <div>{props.currRound}</div></span>
           </div>
-          <div className={`name${props.whomst ? 1 : 2}-turn`}>{props.playStat.name}'s Turn</div>
+          <div className={`name${props.whomst ? 1 : 2}-turn`}>{props.player}'s Turn</div>
           <div className="round-track">
               <span className="span-align">Round Score <div className={`player${props.whomst ? 1 : 2}-color`}>{roundScore}</div></span>
           </div>

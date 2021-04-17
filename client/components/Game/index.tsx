@@ -107,13 +107,13 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
             <div className='pregame'>{prefs.Time} seconds per question</div>
           </div>
           <div>
-            {gameData.turn === whomst ?
-                <Player categories={categories} currRound={gameData.round}
-                  playStat={whomst ? 
-                    { name: player1, score: gameData.score[0] }
-                    :
-                    { name: player2, score: gameData.score[1]}}
-                  sendUpdate={sendUpdate} whomst={whomst} prefs={prefs}
+            {gameData.turn === null ?
+            <GameOver player1={{name: player1, score: gameData.score[0]}} player2={{name: player2, score: gameData.score[0]}}
+              restartGame={null} restartNew={null}/>
+            :
+            gameData.turn === whomst ?
+                <Player categories={categories} currRound={gameData.round} player={whomst ? player1 : player2}
+                  score={gameData.score} sendUpdate={sendUpdate} whomst={whomst} prefs={prefs}
                   />
                 :
                 <Spectator/>

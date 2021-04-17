@@ -5,10 +5,11 @@ import { Prefs } from './../../../app';
 interface IProps {
   currRound: number,
   categories: ICategory[],
-  playStat: IPlayer,
   sendUpdate: (update: any) => void,
   whomst: boolean,
-  prefs: Prefs
+  prefs: Prefs,
+  score: number[],
+  player: string
 }
 
 export interface IPlayer {
@@ -50,11 +51,15 @@ const Player: React.FC<IProps> = (props) => {
     setView(false);
   }
 
-  const next = () => {
+  const next = (roundScore: number) => {
     props.sendUpdate({
-      'gameData.turn': !props.whomst,
+      'gameData.turn': !props.whomst && props.currRound === props.prefs.Rounds ? null : !props.whomst,
       'gameData.round': props.whomst ? 
-        props.currRound : props.currRound + 1
+        props.currRound : props.currRound + 1,
+      'gameData.score': [
+        props.score[0] + (props.whomst ? roundScore : 0),
+        props.score[1] + (props.whomst ? 0 : roundScore)
+      ]
       });
   }
   
@@ -67,7 +72,7 @@ const Player: React.FC<IProps> = (props) => {
           <div className="round-track">
             <span className="span-align">Round <div>{props.currRound}</div></span>
           </div>
-        <div className={`name${props.whomst ? 1 : 2}-turn`}>{props.playStat.name}'s Turn</div>
+        <div className={`name${props.whomst ? 1 : 2}-turn`}>{props.player}'s Turn</div>
       </div>
       <div className="cards">{props.categories.map((category: ICategory) => (
           <div key={category.id}>
@@ -90,7 +95,7 @@ const Player: React.FC<IProps> = (props) => {
       </div>
       :
       <QuestionsView category={category} level={level} prefs={props.prefs}
-        playStat={props.playStat} next={next} currRound={props.currRound} whomst={props.whomst}/>
+        next={next} currRound={props.currRound} whomst={props.whomst} player={props.player}/>
       }
       
     </div>
