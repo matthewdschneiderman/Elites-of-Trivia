@@ -1,14 +1,9 @@
-import React from "react";
+import React, { useState, FC } from "react";
 import axios from 'axios';
 import "regenerator-runtime/runtime.js";
 import { ICategory } from './../Player/index';
 import { Prefs } from './../../../app';
 
-
-interface IPlayer {
-  name: string,
-  score: number
-}
 
 interface IProps {
   category: ICategory,
@@ -17,7 +12,8 @@ interface IProps {
   next: (roundScore: number) => void,
   whomst: boolean,
   prefs: Prefs,
-  player: string
+  player: string,
+  questions: IQuestion[]
 }
 
 export interface IQuestion {
@@ -26,72 +22,45 @@ export interface IQuestion {
   question: string
 }
 
-const QuestionsView: React.FC<IProps> = (props) => {
+const QuestionsView: FC<IProps> = (props) => {
 
 
-  interface Options {
-    amount: number,
-    category: number,
-    difficulty: string,
-    type: 'multiple',
-  }
+  const [roundScore, setRoundScore] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
+  const [questionAnswered, setQuestionAnswered] = useState<boolean>(false);
+  const [lastQ, setLastQ] = useState<boolean>(false);
+  const [change, setChange] = useState<boolean>(false);
+  //const [history, setHistory] = useState<string[]>([]);
 
-  const [questions, setQuestions] = React.useState<IQuestion[]>([]);
-  const [roundScore, setRoundScore] = React.useState<number>(0);
-  const [count, setCount] = React.useState<number>(0);
-  const [questionAnswered, setQuestionAnswered] = React.useState<boolean>(false);
-  //const [history, setHistory] = React.useState<string[]>([]);
-
-  const options: Options = {
-    amount: Number(props.prefs.Questions),
-    category: props.category.id,
-    difficulty: props.level,
-    type: 'multiple',
-  }
+ 
 
   React.useEffect(() => {
-      axios({
-        url: '/opentdb',
-        method: 'get',
-        params: {
-          method: 'questions',
-          options: options
-        }
-      }).then((result: any) => {
-        setQuestions(result.data);
-      });
-    
-  }, []);
+
+  }, [change]);
 
 
   const showAnswer = (e: any) => {
-    if (e.target.value === questions[count].correct) {
-      setRoundScore(roundScore + 100);
-      document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
+    if (e.target.value === props.questions[count].correct) {
+      setRoundScore(roundScore + (props.level === 'easy' ? 50 : props.level === 'medium' ? 75 : 100));
+      //document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
     } else {
-      document.body.style.backgroundColor = "rgb(248 3 3 / 30%)"
+      //document.body.style.backgroundColor = "rgb(248 3 3 / 30%)"
     }
-
     if (count === Number(props.prefs.Questions) - 1) {
-      document.getElementById("end-btn").classList.remove("hide")
-    } else {
-      document.getElementById("next-btn").classList.remove("hide");
+      setLastQ(true);
     }
-    setQuestionAnswered(true)
+    setQuestionAnswered(true);
+    setChange(!change);
   }
 
   const nextQuestion = () => {
-    setQuestionAnswered(false)
-    document.body.style.backgroundColor =  "#7e55aa94"
-    document.getElementById("next-btn").classList.add("hide")
-    setCount(count + 1)
+    setQuestionAnswered(false);
+    //document.body.style.backgroundColor =  "#7e55aa94"
+    setCount(count + 1);
+    setChange(!change);
   }
-  if (questions.length < 1) {
-    return <div className="loading">"loading..."</div>
-  } else {
     return (
       <div>
-        {console.log(props)}
         <div className="player-turn">
           <div className="round-track">
             <span className="span-align">Round <div>{props.currRound}</div></span>
@@ -103,21 +72,27 @@ const QuestionsView: React.FC<IProps> = (props) => {
         </div>
         <div className="question-container">
           <div className="category"><span>{props.category.name}</span></div>
-          <div className="question-style">{questions[count].question}</div>
-          <div className="answer-choices">{questions[count].answers.map((answer) => {
+          <div className="question-style">{props.questions[count].question}</div>
+          <div className="answer-choices">{props.questions[count].answers.map((answer) => {
             return <button className="all-answers" key={answer} value={answer} disabled={questionAnswered} onClick={showAnswer}
-              style={answer === questions[count].correct && questionAnswered ? {backgroundColor: 'green'}: {}}>
+              style={answer === props.questions[count].correct && questionAnswered ? {backgroundColor: 'green'}: {}}>
               <span className="card-Anws">{answer}</span>
               </button>
           })}</div>
           <div className="button-move">
-            <button id='next-btn' className='hide btn' onClick={nextQuestion}>Next Question</button>
-            <button id='end-btn' className='hide btn' onClick={() => props.next(roundScore)}>End Round</button>
+            {questionAnswered ?
+            lastQ ? 
+            <button className='btn' onClick={() => props.next(roundScore)}>End Round</button>
+            :
+            <button className='btn' onClick={nextQuestion}>Next Question</button>
+            :
+            null
+          }
           </div>
         </div>
       </div>
     )
-        }
+        
 }
 
 export default QuestionsView;

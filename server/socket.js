@@ -4,6 +4,8 @@ const port = 5000;
 var server = require('http').createServer(app);
 console.log('Socket.io running on port 5000');
 
+var finishedGames = {};
+
 const io = require('socket.io')(server, {
   cors: {
     // origin: 'http://18.224.228.145:80',
@@ -17,7 +19,7 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
   // console.log('connected');
   socket.on('disconnect', (reason) => {
-    console.log('disconnected');
+    //console.log('disconnected');
   });
 
   socket.on('join room', (data) => {
@@ -30,7 +32,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leave room', (data) => {
-    console.log('a user disconnected');
+    //console.log('a user disconnected');
     socket.leave(data.room);
   });
 
@@ -39,13 +41,21 @@ io.on('connection', (socket) => {
   });
 
   socket.on('guest joined', (data) => {
-    console.log(`Room ${data._id} is full`);
+    //console.log(`Room ${data._id} is full`);
     socket.to(data._id).emit('guest joined', data.guest);
   })
 
   socket.on('game updated', (data) => {
-      console.log(`Room ${data._id} had an update`);
+      //console.log(`Room ${data._id} had an update`);
       socket.to(data._id).emit('game updated', data.byWhom);
+  });
+
+  socket.on('rematch proposed', (data) => {
+    if (finishedGames[data.room]) {
+      socket.to(data.room).emit('rematch accepted', data.user);
+    } else {
+      finishedGames[data.room] = true;
+    }
   });
 });
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import QuestionsView from './../QuestionsView/index';
+import axios from 'axios';
+import QuestionsView, { IQuestion } from './../QuestionsView/index';
 import { Prefs } from './../../../app';
 
 interface IProps {
@@ -43,17 +44,34 @@ const Player: React.FC<IProps> = (props) => {
   const [category, setCategory] = useState<ICategory>(null);
   const [level, setLevel] = useState<string>(null);
   const [view, setView] = useState<boolean>(true);
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
   
   const selectedCategory = (id: number, name: string, diff: string) => {
     props.sendUpdate({'gameData.category': name});
     setCategory({id: id, name: name});
     setLevel(diff);
-    setView(false);
+    axios({
+      url: '/opentdb',
+      method: 'get',
+      params: {
+        method: 'questions',
+        options: {
+          amount: Number(props.prefs.Questions),
+          category: id,
+          difficulty: diff,
+          type: 'multiple',
+        }
+      }
+    }).then((result: any) => {
+      setQuestions(result.data);
+      setView(false);
+    });
   }
 
   const next = (roundScore: number) => {
+    var last: boolean = !props.whomst && props.currRound === props.prefs.Rounds;
     props.sendUpdate({
-      'gameData.turn': !props.whomst && props.currRound === props.prefs.Rounds ? null : !props.whomst,
+      'gameData.turn': last ? null : !props.whomst,
       'gameData.round': props.whomst ? 
         props.currRound : props.currRound + 1,
       'gameData.score': [
@@ -61,6 +79,9 @@ const Player: React.FC<IProps> = (props) => {
         props.score[1] + (props.whomst ? 0 : roundScore)
       ]
       });
+      if (last) {
+        
+      }
   }
   
   return (
@@ -94,7 +115,7 @@ const Player: React.FC<IProps> = (props) => {
       </div>
       </div>
       :
-      <QuestionsView category={category} level={level} prefs={props.prefs}
+      <QuestionsView category={category} level={level} prefs={props.prefs} questions={questions}
         next={next} currRound={props.currRound} whomst={props.whomst} player={props.player}/>
       }
       

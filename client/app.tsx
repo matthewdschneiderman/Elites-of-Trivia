@@ -86,9 +86,6 @@ const App: FC = () => {
     }
 
     const backClick = () => {
-      socket.emit('leave room', {
-        room: roomId
-      });
       axios({
         url: '/games',
         method: 'delete',
@@ -140,7 +137,7 @@ const App: FC = () => {
           <div>{
           roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
           <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId}
-            backClick={backClick} view={view} setView={changeView} socket={socket}
+            backClick={backClick} view={view} restart={changeRoom} socket={socket}
             whomst={whomst} gameData={gameData} setGameData={setGameData}/>
         }
           </div>

@@ -37,10 +37,9 @@ const GameOver: FC<IProps> = (props) => {
         return <div className="winner">It's a Tie!</div>
       }
     })()}
-      <div className="click-below">(Click Below to Start Again)</div>
       <div>
-        <button className="over-btn btn" onClick={props.restartGame}>Replay</button>
-        <button className="over-btn btn" onClick={props.restartNew}>New Game</button>
+        <button className="over-btn btn" onClick={props.restartGame}>Rematch</button>
+        <button className="over-btn btn" onClick={props.restartNew}>Back To Lobby</button>
       </div>
     </div>
   )

@@ -26,7 +26,7 @@ interface IProps {
   player1: string;
   player2: string;
   view: string;
-  setView: (view: string) => void;
+  restart: (oldRoom: string, newRoom: string) => void;
   prefs: Prefs;
   socket: any;
   whomst: boolean;
@@ -48,7 +48,7 @@ axios({
 });
 
 
-const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, setView, socket, whomst, gameData, setGameData}) => {
+const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, restart, socket, whomst, gameData, setGameData}) => {
 
 
   const [change, setChange] = useState<boolean>(whomst);
@@ -71,6 +71,17 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
         console.log('Player', whomst ? 2 : 1, 'sent an update:', result.data);
         setGameData(result.data.gameData);
         setChange(!change);
+      });
+    }
+  });
+
+  socket.on('rematch accepted', (byWhom: any) => {
+    console.log('rematch accepted');
+    if (whomst === byWhom) {
+      sendUpdate({
+        'gameData.round': 0,
+        'gameData.score': [0,0],
+        'gameData.turn': true
       });
     }
   });
@@ -105,11 +116,15 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, se
             <div className='pregame'>{prefs.Rounds} rounds</div>
             <div className='pregame'>{prefs.Questions} questions per round</div>
             <div className='pregame'>{prefs.Time} seconds per question</div>
+            <div className='pregame'>{gameData.score[0]}-{gameData.score[1]}</div>
           </div>
           <div>
             {gameData.turn === null ?
-            <GameOver player1={{name: player1, score: gameData.score[0]}} player2={{name: player2, score: gameData.score[0]}}
-              restartGame={null} restartNew={null}/>
+            <GameOver player1={{name: player1, score: gameData.score[0]}} player2={{name: player2, score: gameData.score[1]}}
+              restartGame={() => {
+                socket.emit('rematch proposed', {room: roomId, user: whomst});
+              }}
+              restartNew={() => restart(roomId, 'lobby')}/>
             :
             gameData.turn === whomst ?
                 <Player categories={categories} currRound={gameData.round} player={whomst ? player1 : player2}
