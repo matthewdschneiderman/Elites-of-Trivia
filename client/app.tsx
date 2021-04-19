@@ -7,6 +7,15 @@ const io = require('socket.io-client');
 // import Player, { ICategory, IPlayer } from './components/Player/index'
 // import QuestionsView from './components/QuestionsView/index'
 // import GameOver from './components/GameOver/index'
+const initialData: GameData = {
+        chat: [],
+        round: 1,
+        turn: true,
+        score: [0, 0],
+        category: null,
+        question: null,
+        history: []
+      }
 
 
 export interface Prefs {
@@ -42,16 +51,7 @@ const App: FC = () => {
     const [view, setView] = useState<boolean>(false);
     const [connected, setConnected] = useState<boolean>(false);
     const [whomst, setWhomst] = useState<boolean>(true);
-    const [gameData, setGameData] = useState<GameData>(
-      {
-        chat: [],
-        round: 1,
-        turn: true,
-        score: [0, 0],
-        category: null,
-        question: null,
-        history: []
-      });
+    const [gameData, setGameData] = useState<GameData>(initialData);
     
     useEffect(() => {
     if (!connected) {
@@ -138,6 +138,7 @@ const App: FC = () => {
           roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
           <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId}
             backClick={backClick} view={view} restart={() => {
+              setGameData(initialData);
               changeView(false);
               changeRoom(roomId, 'lobby')
             }} socket={socket}
