@@ -1,5 +1,4 @@
 import React, { useState, FC } from "react";
-import axios from 'axios';
 import "regenerator-runtime/runtime.js";
 import { ICategory } from './../Player/index';
 import { Prefs } from './../../../app';

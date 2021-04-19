@@ -25,8 +25,8 @@ interface IProps {
   backClick: () => void;
   player1: string;
   player2: string;
-  view: string;
-  restart: (oldRoom: string, newRoom: string) => void;
+  view: boolean;
+  restart: () => void;
   prefs: Prefs;
   socket: any;
   whomst: boolean;
@@ -106,10 +106,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
 
   return (
     <div>
-        {view === 'waiting' ? <div className='waiting'>
-            Waiting for opponent, you are {player1}
-            <button onClick={backClick}>Go Back to Lobby</button>
-        </div> :
+        {view ?
         <div>
           <div>
             <div className='pregame'>{player1} vs. {player2}</div>
@@ -124,7 +121,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
               restartGame={() => {
                 socket.emit('rematch proposed', {room: roomId, user: whomst});
               }}
-              restartNew={() => restart(roomId, 'lobby')}/>
+              restartNew={restart}/>
             :
             gameData.turn === whomst ?
                 <Player categories={categories} currRound={gameData.round} player={whomst ? player1 : player2}
@@ -134,6 +131,11 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
                 <Spectator/>
           }
           </div>
+        </div>
+        :
+        <div className='waiting'>
+            Waiting for opponent, you are {player1}
+            <button onClick={backClick}>Go Back to Lobby</button>
         </div>}
     </div>
   );

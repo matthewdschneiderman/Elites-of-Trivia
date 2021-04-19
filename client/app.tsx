@@ -39,7 +39,7 @@ const App: FC = () => {
     const [player1, setPlayer1] = useState<string>('Anonymous');
     const [player2, setPlayer2] = useState<string>('Anonymous');
     const [prefs, setPrefs] = useState<Prefs>({Rounds: null, Questions: null, Time: null});
-    const [view, setView] = useState<string>('waiting');
+    const [view, setView] = useState<boolean>(false);
     const [connected, setConnected] = useState<boolean>(false);
     const [whomst, setWhomst] = useState<boolean>(true);
     const [gameData, setGameData] = useState<GameData>(
@@ -70,7 +70,7 @@ const App: FC = () => {
     socket.on('guest joined', (guest: any) => {
       console.log(guest, 'has joined the game!');
       setPlayer2(guest);
-      changeView('game');
+      changeView(true);
     });
 
     const changeRoom = (oldRoom: string, newRoom: string) => {
@@ -80,7 +80,7 @@ const App: FC = () => {
       setChange(!change);
     }
 
-    const changeView = (view: string) => {
+    const changeView = (view: boolean) => {
       setView(view);
       setChange(!change);
     }
@@ -124,7 +124,7 @@ const App: FC = () => {
           setPlayer1(result.data.user);
           setPlayer2(result.data.guest);
           setPrefs(result.data.prefs);
-          changeView('game');
+          changeView(true);
           socket.emit('guest joined', {_id: _id, guest: result.data.guest});
       })};
     } 
@@ -137,7 +137,10 @@ const App: FC = () => {
           <div>{
           roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
           <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId}
-            backClick={backClick} view={view} restart={changeRoom} socket={socket}
+            backClick={backClick} view={view} restart={() => {
+              changeView(false);
+              changeRoom(roomId, 'lobby')
+            }} socket={socket}
             whomst={whomst} gameData={gameData} setGameData={setGameData}/>
         }
           </div>
