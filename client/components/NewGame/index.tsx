@@ -50,6 +50,10 @@ const NewGame: React.FC<IProps> = (props) => {
   }
 
   return (
+    <div>
+      <div className="header">
+        <div className="title">Elites of Trivia</div>
+      </div>
     <div className='home'>
       <Preferences prefs={prefs} setPrefs={onClick}/>
       <ActiveGames list={list} handleClick={props.handleClick}/>
@@ -72,6 +76,7 @@ const NewGame: React.FC<IProps> = (props) => {
         Create Game as {user}
       </div>
       : null}
+    </div>
     </div>
   )
 }

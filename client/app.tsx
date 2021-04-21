@@ -130,10 +130,6 @@ const App: FC = () => {
     } 
       
     return (
-      <div>
-        <div className="header">
-          <div className="title">Elites of Trivia</div>
-        </div>
           <div>{
           roomId === 'lobby' ? <NewGame handleClick={lobbyAction} change={change}/> :
           <Game player1={player1} player2={player2} prefs={prefs} roomId={roomId}
@@ -145,7 +141,6 @@ const App: FC = () => {
             whomst={whomst} gameData={gameData} setGameData={setGameData}/>
         }
           </div>
-    </div>
     )
   }
 

@@ -120,12 +120,19 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
     <div>
         {view ?
         <div>
+          <div className="header">
+            <div className='game-player' style={{left: 30}}>
+              <div className='player-title'>{player1}</div>
+              <div className='player-score'>{gameData.score[0]}</div>
+            </div>
+            <div className="title">Elites of Trivia</div>
+            <div className='game-player' style={{right: 30}}>
+              <div className='player-title'>{player2}</div>
+              <div className='player-score'>{gameData.score[1]}</div>
+            </div>
+            <div className='pregame'>{prefs.Rounds} rounds, {prefs.Questions} questions per round, {prefs.Time} seconds per question</div>
+          </div>
           <div>
-            <div className='pregame'>{player1} vs. {player2}</div>
-            <div className='pregame'>{prefs.Rounds} rounds</div>
-            <div className='pregame'>{prefs.Questions} questions per round</div>
-            <div className='pregame'>{prefs.Time} seconds per question</div>
-            <div className='pregame'>{gameData.score[0]}-{gameData.score[1]}</div>
           </div>
           <div>
             {gameData.turn === null ?
@@ -138,7 +145,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
                   sendUpdate={sendUpdate} whomst={whomst} prefs={prefs} gameData={gameData}
                   />
                 :
-                <Spectator gameData={gameData}/>
+                <Spectator gameData={gameData} opponent={whomst ? player2 : player1}/>
           }
           </div>
         </div>
