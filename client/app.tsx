@@ -125,7 +125,7 @@ const App: FC = () => {
           setPlayer2(result.data.guest);
           setPrefs(result.data.prefs);
           changeView(true);
-          socket.emit('guest joined', {_id: _id, guest: result.data.guest});
+          socket.emit('guest joined', {room: _id, guest: result.data.guest});
       })};
     } 
       

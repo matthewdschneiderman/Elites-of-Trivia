@@ -9,6 +9,7 @@ interface IProps {
   level: string,
   currRound: number,
   next: (roundScore: number) => void,
+  sendQA: (QA: string, content: string | boolean) => void,
   whomst: boolean,
   prefs: Prefs,
   player: string,
@@ -27,6 +28,7 @@ const QuestionsView: FC<IProps> = (props) => {
   const [roundScore, setRoundScore] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = useState<boolean>(false);
+  const [correct, setCorrect] = useState<boolean>(false);
   const [lastQ, setLastQ] = useState<boolean>(false);
   const [change, setChange] = useState<boolean>(false);
   //const [history, setHistory] = useState<string[]>([]);
@@ -34,13 +36,15 @@ const QuestionsView: FC<IProps> = (props) => {
  
 
   React.useEffect(() => {
-
+    props.sendQA(questionAnswered ? 'answer' : 'question',
+      questionAnswered ? correct : props.questions[count].question);
   }, [change]);
 
 
   const showAnswer = (e: any) => {
     if (e.target.value === props.questions[count].correct) {
       setRoundScore(roundScore + (props.level === 'easy' ? 50 : props.level === 'medium' ? 75 : 100));
+      setCorrect(true);
       //document.body.style.backgroundColor = "rgb(13 158 13 / 46%)"
     } else {
       //document.body.style.backgroundColor = "rgb(248 3 3 / 30%)"
@@ -54,10 +58,12 @@ const QuestionsView: FC<IProps> = (props) => {
 
   const nextQuestion = () => {
     setQuestionAnswered(false);
+    setCorrect(false);
     //document.body.style.backgroundColor =  "#7e55aa94"
     setCount(count + 1);
     setChange(!change);
   }
+
     return (
       <div>
         <div className="player-turn">

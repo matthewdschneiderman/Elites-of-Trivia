@@ -20,6 +20,11 @@ export interface GameData {
   history: string[];
 }
 
+export interface SpecData {
+  question: string,
+  correct: boolean
+}
+
 interface IProps {
   roomId: string;
   backClick: () => void;
@@ -52,6 +57,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
 
 
   const [change, setChange] = useState<boolean>(whomst);
+  const [specData, setSpecData] = useState<SpecData[]>([]);
 
   useEffect(() => {
 
@@ -86,6 +92,23 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
     }
   });
 
+  socket.on('question', (question: string) => {
+    if (gameData.turn !== whomst) {
+      setSpecData(specData.concat([{ question: question, correct: null }]));
+      setChange(!change);
+    }
+  });
+
+  socket.on('answer', (correct: boolean) => {
+    if (gameData.turn !== whomst) {
+      setSpecData((data) => {
+        data[data.length - 1].correct = correct;
+        return data;
+      });
+      setChange(!change);
+    }
+  });
+
   const sendUpdate = (update: any) => {
     axios({
       url: '/games',
@@ -98,9 +121,13 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
     })
     .then((result: any) => {
       setGameData(result.data.gameData);
-      socket.emit('game updated', { _id: roomId, byWhom: whomst });
+      socket.emit('game updated', { room: roomId, byWhom: whomst });
       setChange(!change);
     })
+  };
+
+  const sendQA = (QA: string, content: string | boolean) => {
+    socket.emit(QA, { room: roomId, content: content})
   };
 
 
@@ -125,10 +152,10 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
             :
             gameData.turn === whomst ?
                 <Player categories={categories} currRound={gameData.round} player={whomst ? player1 : player2}
-                  score={gameData.score} sendUpdate={sendUpdate} whomst={whomst} prefs={prefs}
+                  score={gameData.score} sendUpdate={sendUpdate} whomst={whomst} prefs={prefs} sendQA={sendQA}
                   />
                 :
-                <Spectator/>
+                <Spectator specData={specData}/>
           }
           </div>
         </div>
@@ -139,6 +166,11 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
         </div>}
     </div>
   );
+};
+
+export default Game;
+
+
   
   /*
     const [inRoom, setInRoom] = useState(false);
@@ -241,6 +273,3 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
           <GameOver player1={player1} player2={player2} restartGame={restartGame} restartNew={restartNew}/>
         }
         */
-};
-
-export default Game;

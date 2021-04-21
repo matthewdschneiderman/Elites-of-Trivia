@@ -42,12 +42,20 @@ io.on('connection', (socket) => {
 
   socket.on('guest joined', (data) => {
     //console.log(`Room ${data._id} is full`);
-    socket.to(data._id).emit('guest joined', data.guest);
+    socket.to(data.room).emit('guest joined', data.guest);
   })
 
   socket.on('game updated', (data) => {
       //console.log(`Room ${data._id} had an update`);
-      socket.to(data._id).emit('game updated', data.byWhom);
+      socket.to(data.room).emit('game updated', data.byWhom);
+  });
+
+  socket.on('question', (data) => {
+    socket.to(data.room).emit('question', data.content);
+  });
+
+  socket.on('answer', (data) => {
+    socket.to(data.room).emit('answer', data.content);
   });
 
   socket.on('rematch proposed', (data) => {

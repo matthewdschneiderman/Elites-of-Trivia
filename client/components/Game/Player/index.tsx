@@ -7,6 +7,7 @@ interface IProps {
   currRound: number,
   categories: ICategory[],
   sendUpdate: (update: any) => void,
+  sendQA: (QA: string, data: any) => void,
   whomst: boolean,
   prefs: Prefs,
   score: number[],
@@ -116,7 +117,8 @@ const Player: React.FC<IProps> = (props) => {
       </div>
       :
       <QuestionsView category={category} level={level} prefs={props.prefs} questions={questions}
-        next={next} currRound={props.currRound} whomst={props.whomst} player={props.player}/>
+        next={next} currRound={props.currRound} whomst={props.whomst} player={props.player}
+        sendQA={props.sendQA}/>
       }
       
     </div>
