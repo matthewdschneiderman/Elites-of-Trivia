@@ -30,11 +30,11 @@ const activegames = mongoose.model(
         id: Number,
         name: String
       },
-      question: String,
-      history: [
+      level: String,
+      questions: [
         {
-          question: String,
-          correct: Boolean
+        question: String,
+        correct: Boolean
         }
       ]
     }
@@ -98,8 +98,8 @@ const joinGame = (res, room, user) => {
         turn: true,
         score: [0,0],
         category: null,
-        question: null,
-        history: []
+        level: null,
+        questions: [],
       }
     },
     { new: true }

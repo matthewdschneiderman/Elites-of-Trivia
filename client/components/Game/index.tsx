@@ -10,19 +10,25 @@ import { Prefs } from './../../app';
 import { Socket } from 'dgram';
 
 
-export interface GameData {
-  chat: string[];
-  round: number;
-  turn: boolean;
-  score: number[];
-  category: ICategory;
-  question: string;
-  history: string[];
-}
-
-export interface SpecData {
+export interface SpecQuestion {
   question: string,
   correct: boolean
+}
+export interface GameData {
+  chat: string[],
+  round: number,
+  turn: boolean,
+  score: number[],
+  category: ICategory,
+  level: string,
+  questions: SpecQuestion[],
+}
+
+
+export interface SpecData {
+  category: string,
+  level: string,
+  questions: SpecQuestion[],
 }
 
 interface IProps {
@@ -57,7 +63,6 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
 
 
   const [change, setChange] = useState<boolean>(whomst);
-  const [specData, setSpecData] = useState<SpecData[]>([]);
 
   useEffect(() => {
 
@@ -92,22 +97,6 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
     }
   });
 
-  socket.on('question', (question: string) => {
-    if (gameData.turn !== whomst) {
-      setSpecData(specData.concat([{ question: question, correct: null }]));
-      setChange(!change);
-    }
-  });
-
-  socket.on('answer', (correct: boolean) => {
-    if (gameData.turn !== whomst) {
-      setSpecData((data) => {
-        data[data.length - 1].correct = correct;
-        return data;
-      });
-      setChange(!change);
-    }
-  });
 
   const sendUpdate = (update: any) => {
     axios({
@@ -123,11 +112,7 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
       setGameData(result.data.gameData);
       socket.emit('game updated', { room: roomId, byWhom: whomst });
       setChange(!change);
-    })
-  };
-
-  const sendQA = (QA: string, content: string | boolean) => {
-    socket.emit(QA, { room: roomId, content: content})
+    });
   };
 
 
@@ -145,17 +130,15 @@ const Game: FC<IProps> = ({ player1, player2, prefs, roomId, backClick, view, re
           <div>
             {gameData.turn === null ?
             <GameOver player1={{name: player1, score: gameData.score[0]}} player2={{name: player2, score: gameData.score[1]}}
-              restartGame={() => {
-                socket.emit('rematch proposed', {room: roomId, user: whomst});
-              }}
+              restartGame={() => socket.emit('rematch proposed', {room: roomId, user: whomst})}
               restartNew={restart}/>
             :
             gameData.turn === whomst ?
                 <Player categories={categories} currRound={gameData.round} player={whomst ? player1 : player2}
-                  score={gameData.score} sendUpdate={sendUpdate} whomst={whomst} prefs={prefs} sendQA={sendQA}
+                  sendUpdate={sendUpdate} whomst={whomst} prefs={prefs} gameData={gameData}
                   />
                 :
-                <Spectator specData={specData}/>
+                <Spectator gameData={gameData}/>
           }
           </div>
         </div>

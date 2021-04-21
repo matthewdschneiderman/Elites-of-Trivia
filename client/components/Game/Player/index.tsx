@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import QuestionsView, { IQuestion } from './../QuestionsView/index';
+import { GameData } from './../index'
 import { Prefs } from './../../../app';
 
 interface IProps {
   currRound: number,
   categories: ICategory[],
   sendUpdate: (update: any) => void,
-  sendQA: (QA: string, data: any) => void,
+  gameData: GameData,
   whomst: boolean,
   prefs: Prefs,
-  score: number[],
   player: string
 }
 
@@ -48,7 +48,6 @@ const Player: React.FC<IProps> = (props) => {
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   
   const selectedCategory = (id: number, name: string, diff: string) => {
-    props.sendUpdate({'gameData.category': name});
     setCategory({id: id, name: name});
     setLevel(diff);
     axios({
@@ -65,6 +64,11 @@ const Player: React.FC<IProps> = (props) => {
       }
     }).then((result: any) => {
       setQuestions(result.data);
+      props.sendUpdate({
+        'gameData.category': name,
+        'gameData.level' : diff,
+        'gameData.questions' : [{question: result.data[0].question, correct: null}]
+      });
       setView(false);
     });
   }
@@ -76,13 +80,13 @@ const Player: React.FC<IProps> = (props) => {
       'gameData.round': props.whomst ? 
         props.currRound : props.currRound + 1,
       'gameData.score': [
-        props.score[0] + (props.whomst ? roundScore : 0),
-        props.score[1] + (props.whomst ? 0 : roundScore)
-      ]
+        props.gameData.score[0] + (props.whomst ? roundScore : 0),
+        props.gameData.score[1] + (props.whomst ? 0 : roundScore)
+      ],
+      'gameData.questions': [],
+      'gameData.category': null,
+      'gameData.level': null
       });
-      if (last) {
-        
-      }
   }
   
   return (
@@ -118,7 +122,7 @@ const Player: React.FC<IProps> = (props) => {
       :
       <QuestionsView category={category} level={level} prefs={props.prefs} questions={questions}
         next={next} currRound={props.currRound} whomst={props.whomst} player={props.player}
-        sendQA={props.sendQA}/>
+        sendUpdate={props.sendUpdate} gameData={props.gameData}/>
       }
       
     </div>

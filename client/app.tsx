@@ -13,8 +13,8 @@ const initialData: GameData = {
         turn: true,
         score: [0, 0],
         category: null,
-        question: null,
-        history: []
+        level: null,
+        questions: []
       }
 
 

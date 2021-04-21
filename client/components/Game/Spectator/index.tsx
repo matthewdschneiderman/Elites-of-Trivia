@@ -1,23 +1,25 @@
 import React, { FC } from 'react'
-import { SpecData } from './../index'
+import { GameData } from './../index'
 
 interface IProps {
-  specData: SpecData[]
+  gameData: GameData
 }
 
 
-const Spectator: FC<IProps> = ({ specData }) => {
+const Spectator: FC<IProps> = ({ gameData }) => {
 
 
 
   return (
     <div>
       I'm spectating
-      {specData.map((item) => {
-        return <div key={item.question} style={{color: item.correct === null ? 'blue' : item.correct ? 'green' : 'red'}}>
-          {item.question}
-        </div>
-      })}
+      {gameData.category} : {gameData.level}
+      {gameData.questions.map((item) => {
+            return <div key={item.question} style={{color: item.correct === null ? 'blue' : item.correct ? 'green' : 'red'}}>
+              {item.question}
+            </div>
+        })
+      }
     </div>
   )
 }
